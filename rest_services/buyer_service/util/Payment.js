@@ -75,5 +75,5 @@ exports.notifyPaymentSuccessfull = async(order) => {
         to: order.buyer_phone,
         body: `Order has been placed - ${order._id}`,
     };
-    sendSms(smsOptions);
+    // sendSms(smsOptions);
 };

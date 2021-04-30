@@ -44,7 +44,7 @@ exports.validateOrderDetails = async(order, user) => {
         return { order, errors };
     }
 
-    var { errors, validatedOrder } = await this.validateOrderProduct(order);
+    var { errors, validatedOrder } = await this.validateOrderProducts(order);
 
     if (Object.keys(errors) == 0) {
         if (!validatedOrder.buyer_name || !validatedOrder.buyer_email)
@@ -76,22 +76,40 @@ exports.validateOrderDetails = async(order, user) => {
     return { validatedOrder, errors };
 };
 
-exports.validateOrderProduct = async(order) => {
+exports.validateOrderProducts = async(order) => {
     var errors = {};
-    var product = null;
     var validatedOrder = order;
     try {
-        if (!order) errors.order = "Invalid order details";
-        else if (!order.product_id) errors.product = "Invalid product details";
+        if (!order ||
+            !order.products ||
+            !Array.isArray(order.products) ||
+            order.products.length == 0
+        )
+            errors.order = "Invalid order details";
         else {
-            product = await Product.findById(order.product_id);
-            if (!product) errors.product = "Invalid product details";
-            else if (!order.product_quantity || isNaN(order.product_quantity))
-                errors.product_quantity = "Select order quantity";
-            else if (order.product_quantity > product.stock)
-                errors.stock = "Product does not have enough stock";
-            else
-                validatedOrder.payment_value = product.price * order.product_quantity;
+            var productErrors = [];
+            var totalValue = 0;
+            for (let index = 0; index < order.products.length; index++) {
+                try {
+                    var orderProduct = order.products[index];
+                    var product = await Product.findById(orderProduct.id);
+
+                    if (!product)
+                        productErrors.push(`${orderProduct.id} Invalid product details`);
+                    else if (!orderProduct.quantity || isNaN(orderProduct.quantity))
+                        productErrors.push(`${orderProduct.id} Select order quantity`);
+                    else if (orderProduct.quantity > product.stock)
+                        productErrors.push(
+                            `${orderProduct.id} Product does not have enough stock`
+                        );
+                    else totalValue += product.price * orderProduct.quantity;
+                } catch (error) {
+                    productErrors.push(`${orderProduct.id} Invalid product details`);
+                }
+            }
+
+            if (productErrors.length > 0) errors.productErrors = productErrors;
+            if (Object.keys(errors) == 0) validatedOrder.payment_value = totalValue;
         }
     } catch (error) {
         errors.product = "Invalid product details";

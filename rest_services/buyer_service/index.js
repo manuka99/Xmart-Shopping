@@ -12,6 +12,7 @@ app.use(cors());
 
 app.use("/api/product", require("./routes/ProductRoutes"));
 app.use("/api/order", userAuth, require("./routes/OrderRoutes"));
+app.use("/api/cart", userAuth, require("./routes/CartRoutes"));
 
 const startApp = async() => {
     try {

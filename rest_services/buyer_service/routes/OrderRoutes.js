@@ -1,10 +1,9 @@
 const router = require("express").Router();
 const OrderController = require("../controllers/OrderController");
-const userAuth = require("../middlewares/UserAuth");
 
-router.post("/", userAuth, OrderController.newOrder);
-router.get("/:order_id", userAuth, OrderController.getOrderDetails);
-router.post("/:order_id", userAuth, OrderController.saveOrderDetails);
-router.post("/pay/:order_id", userAuth, OrderController.orderPayment);
+router.post("/", OrderController.newOrder);
+router.get("/:order_id", OrderController.getOrderDetails);
+router.post("/:order_id", OrderController.saveOrderDetails);
+router.post("/pay/:order_id", OrderController.orderPayment);
 
 module.exports = router;

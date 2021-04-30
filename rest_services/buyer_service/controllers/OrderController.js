@@ -3,7 +3,7 @@ const Product = require("../model/Product");
 const {
     validateNewOrder,
     validateOrderDetails,
-    validateOrderProduct,
+    validateOrderProducts,
 } = require("../util/Order");
 const {
     cardTransfer,
@@ -13,17 +13,15 @@ const {
 
 exports.newOrder = async(req, res) => {
     try {
-        var { errors, validatedOrder } = await validateOrderProduct(req.body);
+        var { errors, validatedOrder } = await validateOrderProducts(req.body);
 
         //validate new Order
-        console.log(errors);
         if (Object.keys(errors) == 0) {
             //save the order
             let order = new Order({
                 order_status: "pending",
                 user_id: req.user._id,
-                product_id: req.body.product_id,
-                product_quantity: req.body.product_quantity,
+                products: req.body.products,
                 payment_value: validatedOrder.payment_value,
             });
 
@@ -39,7 +37,10 @@ exports.newOrder = async(req, res) => {
 
 exports.getOrderDetails = async(req, res) => {
     try {
-        let order = await Order.findById(req.params.order_id);
+        let order = await Order.findOne({
+            _id: req.params.order_id,
+            user_id: req.user._id,
+        });
         return res.status(200).json(order);
     } catch (error) {
         console.error(error);

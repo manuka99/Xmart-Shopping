@@ -5,7 +5,9 @@ router.get("/", ProductController.listProducts);
 
 router.post("/", ProductController.storeProduct);
 
-router.get("/:pid", ProductController.findProducts);
+router.get("/:pid", ProductController.findProduct);
+
+router.get("/search/:text", ProductController.searchProducts);
 
 router.patch("/:pid", ProductController.updateProduct);
 

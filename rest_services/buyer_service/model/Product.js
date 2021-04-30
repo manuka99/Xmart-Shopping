@@ -10,4 +10,6 @@ const productSchema = new Schema({
     stock: { type: Number, required: true },
 }, { timestamps: true });
 
+productSchema.index({ name: "text", description: "text" });
+
 module.exports = model("product", productSchema);

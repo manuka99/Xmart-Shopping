@@ -10,11 +10,24 @@ exports.listProducts = async(req, res) => {
     }
 };
 
-exports.findProducts = async(req, res) => {
+exports.findProduct = async(req, res) => {
     try {
         let product = await Product.findById(req.params.pid);
         if (product) return res.status(200).json(product);
         else return res.status(400).json({ message: "Product not found" });
+    } catch (error) {
+        console.error(error);
+        return res.status(400).json(error);
+    }
+};
+
+exports.searchProducts = async(req, res) => {
+    try {
+        let products = await Product.find({
+            $text: { $search: req.params.text },
+        });
+        if (products.length > 0) return res.status(200).json(products);
+        else return res.status(400).json({ message: "Products not found" });
     } catch (error) {
         console.error(error);
         return res.status(400).json(error);

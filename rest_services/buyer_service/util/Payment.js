@@ -1,16 +1,39 @@
 const axios = require("axios");
-const { CARD_PAYMENT_GATEWAY, MAIL_USER } = require("../config");
+const {
+    CARD_PAYMENT_GATEWAY,
+    MAIL_USER,
+    MOBILE_PAYMENT_GATEWAY,
+} = require("../config");
 const { sendMail, readHTMLFile } = require("./MailService");
 var handlebars = require("handlebars");
 const { sendSms } = require("./SmsService");
 
-exports.cardTransfer = async(payment, transfer_amount) => {
+exports.cardTransfer = async(cardPayment, transfer_amount) => {
     var errors = {};
     try {
         var response = await axios.post(CARD_PAYMENT_GATEWAY, {
-            card_no: payment.card_no,
-            card_cvc: payment.card_cvc,
-            card_holder_name: payment.card_holder_name,
+            card_no: cardPayment.card_no,
+            card_cvc: cardPayment.card_cvc,
+            card_holder_name: cardPayment.card_holder_name,
+            transfer_amount: transfer_amount,
+        });
+
+        errors = response.data.errors;
+
+        if (response.data.status == 1) return { errors, completed: true };
+        else return { errors, completed: false };
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+};
+
+exports.mobileTransfer = async(mobilePayment, transfer_amount) => {
+    var errors = {};
+    try {
+        var response = await axios.post(MOBILE_PAYMENT_GATEWAY, {
+            mobile_no: mobilePayment.mobile_no,
+            pin: mobilePayment.pin,
             transfer_amount: transfer_amount,
         });
 

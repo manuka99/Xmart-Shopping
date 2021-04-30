@@ -5,7 +5,11 @@ const {
     validateOrderDetails,
     validateOrderProduct,
 } = require("../util/Order");
-const { cardTransfer, notifyPaymentSuccessfull } = require("../util/Payment");
+const {
+    cardTransfer,
+    notifyPaymentSuccessfull,
+    mobileTransfer,
+} = require("../util/Payment");
 
 exports.newOrder = async(req, res) => {
     try {
@@ -99,7 +103,10 @@ exports.orderPayment = async(req, res) => {
                     } else return res.status(400).json(errors);
                     break;
                 case "mobile":
-                    var { errors, completed } = await cardTransfer(req.body);
+                    var { errors, completed } = await mobileTransfer(
+                        req.body,
+                        order.payment_value
+                    );
                     if (completed) {
                         validatedOrder.payment_status = "paid";
                         validatedOrder.order_status = "validating";

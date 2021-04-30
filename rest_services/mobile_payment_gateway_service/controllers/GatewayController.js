@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const Mobile = require("../models/Mobile");
 const {
     validatePaymentRequest,
@@ -20,7 +21,8 @@ exports.makePayment = async(req, res) => {
             else {
                 // complete transaction
                 mobile.balance += req.body.transfer_amount;
-                mobile.save();
+                await mobile.save();
+                notifyServer(req.body.order_id);
                 return res.status(200).json({
                     payment: "Payment was successfull",
                     status: "1",
@@ -73,4 +75,14 @@ exports.requestPin = async(req, res) => {
             .status(200)
             .json({ errors: { number: "Invalid mobile number" } });
     }
+};
+
+const notifyServer = (orderID) => {
+    axios
+        .post("http://localhost:5001/api/payment/notify", {
+            order_id: orderID,
+            payment_type: "mobile",
+        })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
 };

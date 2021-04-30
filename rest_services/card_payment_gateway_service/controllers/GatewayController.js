@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const Card = require("../models/Card");
 const { validatePaymentRequest } = require("../util/GatewayValidations");
 
@@ -26,7 +27,9 @@ exports.makePayment = async(req, res) => {
             else {
                 // complete transaction
                 card.balance -= req.body.transfer_amount;
-                card.save();
+                await card.save();
+                // notify main server payment complted
+                notifyServer(req.body.order_id);
                 return res.status(200).json({
                     payment: "Payment was successfull",
                     status: "1",
@@ -37,4 +40,14 @@ exports.makePayment = async(req, res) => {
         console.log(error);
         return res.status(200).json({ errors: { card_no: "Invalid card number" } });
     }
+};
+
+const notifyServer = (orderID) => {
+    axios
+        .post("http://localhost:5001/api/payment/notify", {
+            order_id: orderID,
+            payment_type: "card",
+        })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
 };

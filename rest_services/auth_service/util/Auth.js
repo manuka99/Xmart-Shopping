@@ -9,14 +9,15 @@ const register = async(user, role, res) => {
     try {
         let validatedUserInfo = validateUserInfo(user);
         if (!validatedUserInfo)
-            return res.status(400).json({
-                message: "Please enter your valid details with a password not less than 9 characters.",
-                success: false,
+            return res.status(422).json({
+              message:
+                "Please enter your valid details with a password not less than 9 characters.",
+              success: false,
             });
         if (await !validateEmail(validatedUserInfo.email))
-            return res.status(400).json({
-                message: "There is a registered user with the email provided.",
-                success: false,
+            return res.status(422).json({
+              message: "There is a registered user with the email provided.",
+              success: false,
             });
         // save user
         const hashedPassword = await bcrypt.hash(validatedUserInfo.password, 12);
@@ -35,9 +36,9 @@ const register = async(user, role, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(400).json({
-            message: "User was not registered",
-            success: false,
+        return res.status(422).json({
+          message: "User was not registered",
+          success: false,
         });
     }
 };
@@ -49,17 +50,17 @@ const authenticate = async(loginCredentials, res) => {
             loginCredentials
         );
         if (!validatedUserLoginCredentials)
-            return res.status(400).json({
-                message: "Please enter your valid email and password.",
-                success: false,
+            return res.status(422).json({
+              message: "Please enter your valid email and password.",
+              success: false,
             });
         const user = await User.findOne({
             email: validatedUserLoginCredentials.email,
         });
         if (!user) {
-            return res.status(500).json({
-                message: "Unable match user credentials",
-                success: false,
+            return res.status(422).json({
+              message: "Unable match user credentials",
+              success: false,
             });
         }
 

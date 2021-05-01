@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { GuestUser } = require("../middlewares/GuestUser");
 const User = require("../model/User");
 const {
     register,
@@ -12,11 +13,16 @@ router.get("/", async(req, res) =>
 );
 
 router.post(
-    "/register",
-    async(req, res) => await register(req.body, "user", res)
+  "/register",
+  GuestUser,
+  async (req, res) => await register(req.body, "user", res)
 );
 
-router.post("/login", async(req, res) => await authenticate(req.body, res));
+router.post(
+  "/login",
+  GuestUser,
+  async (req, res) => await authenticate(req.body, res)
+);
 
 router.get("/profile", userAuth, async(req, res) => res.send(req.user));
 

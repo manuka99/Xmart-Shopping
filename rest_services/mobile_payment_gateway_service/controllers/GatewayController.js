@@ -1,4 +1,6 @@
+var md5 = require("md5");
 const { default: axios } = require("axios");
+const { PAYMENT_SECRET } = require("../config");
 const Mobile = require("../models/Mobile");
 const {
     validatePaymentRequest,
@@ -20,9 +22,9 @@ exports.makePayment = async(req, res) => {
                 });
             else {
                 // complete transaction
-                mobile.balance += req.body.transfer_amount;
+                mobile.balance += Number.parseFloat(req.body.transfer_amount);
                 await mobile.save();
-                notifyServer(req.body.order_id);
+                notifyServer(req.body.order_id, req.body.transfer_amount);
                 return res.status(200).json({
                     payment: "Payment was successfull",
                     status: "1",
@@ -78,11 +80,15 @@ exports.requestPin = async(req, res) => {
 };
 
 // notify server that the payment was completed
-const notifyServer = (orderID) => {
+const notifyServer = (orderID, transfer_amount) => {
+    // hash the payment data to validate at the buyer server
+    var hash_pay_code = md5(`${PAYMENT_SECRET}${orderID}${transfer_amount}`);
+    console.log(hash_pay_code);
     axios
         .post("http://localhost:5001/api/payment/notify", {
             order_id: orderID,
             payment_type: "mobile",
+            hash_pay_code,
         })
         .then((res) => console.log(res))
         .catch((err) => console.log(err));

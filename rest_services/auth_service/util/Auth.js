@@ -7,11 +7,11 @@ const passport = require("passport");
 // register user
 const register = async(user, role, res) => {
     try {
-        let validatedUserInfo = validateUserInfo(user);
+        let validatedUserInfo = await validateUserInfo(user);
         if (!validatedUserInfo)
             return res.status(422).json({
               message:
-                "Please enter your valid details with a password not less than 9 characters.",
+                "Please enter your valid details with a password not less than 9 characters. and mobile must only have 9 characters",
               success: false,
             });
         if (await !validateEmail(validatedUserInfo.email))
@@ -28,11 +28,12 @@ const register = async(user, role, res) => {
             password: hashedPassword,
         });
 
-        newUser.save();
+        var result = await newUser.save();
 
         return res.status(201).json({
-            message: "User was registered",
-            success: true,
+          message: "User was registered",
+          success: true,
+          user: result._doc,
         });
     } catch (error) {
         console.error(error);
@@ -85,11 +86,11 @@ const authenticate = async(loginCredentials, res) => {
             );
 
             let result = {
-                user_id: user._id,
-                role: user.role,
-                name: user.name,
-                token: `Bearer ${token}`,
-                expiresIn: 168,
+              user_id: user._id,
+              role: user.role,
+              name: user.name,
+              token,
+              expiresIn: 168,
             };
 
             return res.status(200).json({
@@ -112,7 +113,8 @@ const userAuth = passport.authenticate("jwt", { session: false });
 
 // validations
 
-const validateUserInfo = (user) => {
+const validateUserInfo = async (user) => {
+
     if (
         user &&
         user.name &&
@@ -122,7 +124,11 @@ const validateUserInfo = (user) => {
         user.password &&
         user.password.length > 8
     )
-        return user;
+    {
+        var emailValid = await validateEmail(user.email)
+        return emailValid ? user : null;
+    
+    }
     else return null;
 };
 

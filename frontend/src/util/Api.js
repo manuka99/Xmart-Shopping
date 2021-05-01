@@ -1,13 +1,14 @@
 import axios from "axios";
 import swal from "sweetalert";
+import { APP_BASE_URL, XMART_USER_TOKEN } from "./AppConstants";
 
 export default function Api(nonApi = false) {
-  let user_token = localStorage.getItem("xmart_user_token");
+  let user_token = localStorage.getItem(XMART_USER_TOKEN);
   const api = axios.create({
-    baseURL: `http://localhost:5000${nonApi ? "" : "/api"}`,
+    baseURL: `${APP_BASE_URL}${nonApi ? "" : "/api"}`,
     timeout: 5000,
     headers: {
-      Authorization: user_token,
+      Authorization: `Bearer ${user_token}`,
       "Content-Type": "application/json",
     },
   });
@@ -18,7 +19,7 @@ export default function Api(nonApi = false) {
       //  const originalRequest = error.config;
       if (error.response) {
         if (error.response.status === 401) {
-          swal("Please log in to access this route");
+          swal("User must be Logged In to access protected content");
         } else if (error.response.status === 403) {
           //no required roles
           swal({

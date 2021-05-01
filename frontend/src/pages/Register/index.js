@@ -19,7 +19,6 @@ import { fetch_auth_user_data_success, user_login } from "../../redux";
 import { useNavigate } from "react-router";
 import { Link as Link_NAV } from "react-router-dom";
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -52,16 +51,21 @@ export default function Index() {
     });
   };
 
-  const loginSubmit = () => {
+  const registerSubmit = () => {
     if (loginInfo.email && loginInfo.password)
       Api()
-        .post("/auth/login", loginInfo)
+        .post("/auth/register", loginInfo)
         .then((res) => {
-          localStorage.setItem(XMART_USER_TOKEN, res.data.token);
-          store.dispatch(fetch_auth_user_data_success({ user: res.data }));
-          store.dispatch(user_login());
-          swal("You have successfully Logged In");
-          navigate("/");
+          console.log(res);
+          if (res.data.user) {
+            localStorage.setItem(XMART_USER_TOKEN, res.data.token);
+            store.dispatch(
+              fetch_auth_user_data_success({ user: res.data.user })
+            );
+            store.dispatch(user_login());
+            swal("You have successfully Registered");
+            navigate("/");
+          } else swal("Registration failed");
         })
         .catch((err) => console.log(err));
     else swal("Enter email and password");
@@ -75,9 +79,21 @@ export default function Index() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          User registration
         </Typography>
         <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Username"
+            name="name"
+            autoComplete="name"
+            autoFocus
+            onChange={handleForm}
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -95,6 +111,18 @@ export default function Index() {
             margin="normal"
             required
             fullWidth
+            id="phone"
+            label="Phone number"
+            name="phone"
+            autoComplete="phone"
+            autoFocus
+            onChange={handleForm}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
             name="password"
             label="Password"
             type="password"
@@ -102,19 +130,15 @@ export default function Index() {
             autoComplete="current-password"
             onChange={handleForm}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Button
             type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={loginSubmit}
+            onClick={registerSubmit}
           >
-            Sign In
+            Register
           </Button>
           <Grid container>
             <Grid item xs>
@@ -123,8 +147,8 @@ export default function Index() {
               </Link>
             </Grid>
             <Grid item>
-              <Link component={Link_NAV} to="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link component={Link_NAV} to="/login" variant="body2">
+                {"Already have an account? Sign In"}
               </Link>
             </Grid>
           </Grid>

@@ -77,6 +77,7 @@ exports.requestPin = async(req, res) => {
     }
 };
 
+// notify server that the payment was completed
 const notifyServer = (orderID) => {
     axios
         .post("http://localhost:5001/api/payment/notify", {

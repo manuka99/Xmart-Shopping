@@ -1,5 +1,6 @@
 const Product = require("../model/Product");
 
+// list all the products
 exports.listProducts = async(req, res) => {
     try {
         let products = await Product.find();
@@ -10,6 +11,7 @@ exports.listProducts = async(req, res) => {
     }
 };
 
+// find product based on id
 exports.findProduct = async(req, res) => {
     try {
         let product = await Product.findById(req.params.pid);
@@ -21,6 +23,7 @@ exports.findProduct = async(req, res) => {
     }
 };
 
+// search products , full text search
 exports.searchProducts = async(req, res) => {
     try {
         let products = await Product.find({
@@ -34,6 +37,7 @@ exports.searchProducts = async(req, res) => {
     }
 };
 
+// save a new product
 exports.storeProduct = async(req, res) => {
     try {
         const newProduct = new Product({
@@ -57,6 +61,7 @@ exports.storeProduct = async(req, res) => {
     }
 };
 
+// update a product
 exports.updateProduct = async(req, res) => {
     try {
         let product = await Product.findById(req.params.pid);
@@ -81,6 +86,7 @@ exports.updateProduct = async(req, res) => {
     }
 };
 
+// delete a product
 exports.deleteProduct = async(req, res) => {
     try {
         let result = await Product.findByIdAndDelete(req.params.pid);
@@ -95,6 +101,7 @@ exports.deleteProduct = async(req, res) => {
     }
 };
 
+// buy a product
 exports.buyProduct = async(req, res) => {
     try {
         let result = await Product.findByIdAndDelete(req.params.pid);

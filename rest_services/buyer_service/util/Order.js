@@ -1,5 +1,6 @@
 const Product = require("../model/Product");
 
+// validate the request and check if there is product_id, product_quantity,
 exports.validateNewOrder = (order) => {
     if (
         order &&
@@ -32,6 +33,7 @@ exports.validateNewOrder = (order) => {
 //     else return false;
 // };
 
+// validate the request and check if there is user_id, buyer_email, buyer_name, buyer_phone, delivery_type and address
 exports.validateOrderDetails = async(order, user) => {
     var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     var errors = {};
@@ -44,6 +46,7 @@ exports.validateOrderDetails = async(order, user) => {
         return { order, errors };
     }
 
+    // validate order products
     var { errors, validatedOrder } = await this.validateOrderProducts(order);
 
     if (Object.keys(errors) == 0) {
@@ -76,6 +79,7 @@ exports.validateOrderDetails = async(order, user) => {
     return { validatedOrder, errors };
 };
 
+// validate order product
 exports.validateOrderProducts = async(order) => {
     var errors = {};
     var validatedOrder = order;

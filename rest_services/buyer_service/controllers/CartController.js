@@ -2,12 +2,15 @@ const Cart = require("../model/Cart");
 const Product = require("../model/Product");
 const { validateOrderProducts } = require("../util/Order");
 
+// get cart od the logged in user
 exports.getCart = async(req, res) => {
     try {
         var cart = await Cart.findOne({ user_id: req.user._id });
+        // if the cart exist and if the cart has products, get the products rom the cart
         if (cart && cart.products.length > 0) {
             for (let index = 0; index < cart.products.length; index++) {
                 try {
+                    // add all the product data
                     cart.products[index].data = await Product.findById(
                         cart.products[index].id
                     );
@@ -23,18 +26,22 @@ exports.getCart = async(req, res) => {
     }
 };
 
+// add, update or delete a product in cart
 exports.storeToCart = async(req, res) => {
     try {
         var cart = await Cart.findOne({ user_id: req.user._id });
+        // validate the products in the cart
         var { errors, validatedOrder } = await validateOrderProducts(req.body);
         if (Object.keys(errors) == 0) {
             if (!cart) {
+                // ifthe user does not habve a cart
                 cart = new Cart({
                     user_id: req.user._id,
                     products: validatedOrder.products,
                     payment_value: validatedOrder.payment_value,
                 });
             } else {
+                // if the user already have a cart
                 cart.products = validatedOrder.products;
                 cart.payment_value = validatedOrder.payment_value;
             }

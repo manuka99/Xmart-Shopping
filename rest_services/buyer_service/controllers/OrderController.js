@@ -11,8 +11,10 @@ const {
     mobileTransfer,
 } = require("../util/Payment");
 
+// new order
 exports.newOrder = async(req, res) => {
     try {
+        // validate the order products including product id and product stock
         var { errors, validatedOrder } = await validateOrderProducts(req.body);
 
         //validate new Order
@@ -35,6 +37,7 @@ exports.newOrder = async(req, res) => {
     }
 };
 
+// retrive the order tails based on id
 exports.getOrderDetails = async(req, res) => {
     try {
         let order = await Order.findOne({
@@ -48,6 +51,7 @@ exports.getOrderDetails = async(req, res) => {
     }
 };
 
+// after the order is created user can save the buyer info and the delivery info
 exports.saveOrderDetails = async(req, res) => {
     try {
         var order = await Order.findById(req.params.order_id);
@@ -57,7 +61,7 @@ exports.saveOrderDetails = async(req, res) => {
         order.buyer_phone = req.body.buyer_phone;
         order.delivery_type = req.body.delivery_type;
         order.delivery_address = req.body.delivery_address;
-
+        // validate the requset
         var { validatedOrder, errors } = await validateOrderDetails(
             order,
             req.user
@@ -75,6 +79,7 @@ exports.saveOrderDetails = async(req, res) => {
     }
 };
 
+// validate order payment and perform functions
 exports.orderPayment = async(req, res) => {
     try {
         var order = await Order.findById(req.params.order_id);
@@ -133,36 +138,5 @@ exports.orderPayment = async(req, res) => {
         console.error(error);
         return res.status(400).json({ message: "Order not found" });
         // return res.status(400).json(error);
-    }
-};
-
-// sent from payment gateways
-exports.paymentOrderNotification = async(req, res) => {
-    try {
-        var order = await Order.findById(req.body.order_id);
-        console.log(order);
-        order.payment_status = "paid";
-        order.order_status = "validating";
-        order.payment_type = req.body.payment_type;
-        await order.save();
-        notifyPaymentSuccessfull(order);
-    } catch (error) {
-        console.error(error);
-    }
-    return res.status(200).json("ok");
-};
-
-exports.codPayment = async(req, res) => {
-    try {
-        var order = await Order.findById(req.body.order_id);
-        order.payment_status = "paid";
-        order.order_status = "validating";
-        order.payment_type = "COD";
-        await order.save();
-        notifyPaymentSuccessfull(order);
-        return res.status(200).json({ message: "Order was placed successfull" });
-    } catch (error) {
-        console.error(error);
-        return res.status(400).json({ message: "Payment failed" });
     }
 };

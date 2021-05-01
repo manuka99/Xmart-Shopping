@@ -6,6 +6,7 @@ const {
 
 const client = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
+// send sms using twilio
 exports.sendSms = (smsOptions) => {
     try {
         client.messages

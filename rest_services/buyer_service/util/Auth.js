@@ -2,7 +2,7 @@ const util = require("util");
 var request = require("request");
 const { AUTH_GATEWAY } = require("../config");
 
-// contact auth service through esb
+// contact auth service through esb to validate the jwt token and get the user
 const getAuthUserFromBearerToken = async(bearer_token) => {
     var token = String(bearer_token).slice(7);
     const options = {

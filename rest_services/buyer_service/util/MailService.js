@@ -2,6 +2,7 @@ var nodemailer = require("nodemailer");
 var { MAIL_USER, MAIL_PASSWORD } = require("../config");
 var fs = require("fs");
 
+// send a mail using gmail
 exports.sendMail = (mailOptions) => {
     var transporter = nodemailer.createTransport({
         service: "gmail",
@@ -20,6 +21,7 @@ exports.sendMail = (mailOptions) => {
     });
 };
 
+// read a .html file and get its data
 exports.readHTMLFile = async(path) => {
     try {
         var data = fs.readFileSync(path, { encoding: "utf-8" });

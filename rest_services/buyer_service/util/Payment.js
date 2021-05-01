@@ -8,6 +8,7 @@ const { sendMail, readHTMLFile } = require("./MailService");
 var handlebars = require("handlebars");
 const { sendSms } = require("./SmsService");
 
+// request the credit cart service using esb  and complete payment
 exports.cardTransfer = async(cardPayment, transfer_amount) => {
     var errors = {};
     try {
@@ -28,6 +29,7 @@ exports.cardTransfer = async(cardPayment, transfer_amount) => {
     }
 };
 
+// request the mobile transfer service using esb  and complete payment
 exports.mobileTransfer = async(mobilePayment, transfer_amount) => {
     var errors = {};
     try {
@@ -47,9 +49,11 @@ exports.mobileTransfer = async(mobilePayment, transfer_amount) => {
     }
 };
 
+// send email and sms notifing payment successfully
 exports.notifyPaymentSuccessfull = async(order) => {
     // send email
     var html = await readHTMLFile("./templates/mail/OrderPlaced.html");
+    // get the email template
     var template = handlebars.compile(html);
     var replacements = {
         orderID: order._id,

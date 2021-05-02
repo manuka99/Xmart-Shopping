@@ -38,12 +38,16 @@ exports.paymentOrderNotification = async(req, res) => {
 exports.codPayment = async(req, res) => {
     try {
         var order = await Order.findById(req.body.order_id);
-        order.payment_status = "paid";
-        order.order_status = "validating";
-        order.payment_type = "COD";
-        await order.save();
+        var { validatedOrder, errors } = await validateOrderDetails(
+          order,
+          req.user
+        );
+        validatedOrder.payment_status = "paid";
+        validatedOrder.order_status = "validating";
+        validatedOrder.payment_type = "COD";
+        await validatedOrder.save();
         // send email and mobile sms after completing payment
-        notifyPaymentSuccessfull(order);
+        notifyPaymentSuccessfull(validatedOrder);
         return res.status(200).json({ message: "Order was placed successfully" });
     } catch (error) {
         console.error(error);

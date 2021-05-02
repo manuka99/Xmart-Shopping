@@ -15,10 +15,20 @@ const Products = loadable(() => import("../pages/Products"), {
   fallback: <ProgressBar />,
 });
 
+const Product = loadable(() => import("../pages/Product"), {
+  fallback: <ProgressBar />,
+});
+
+const Search = loadable(() => import("../pages/Search"), {
+  fallback: <ProgressBar />,
+});
+
 export const AllRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Products />} />
+      <Route path="/:pid" element={<Product />} />
+      <Route path="/search/:search_text" element={<Search />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>

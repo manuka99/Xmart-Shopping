@@ -1,9 +1,10 @@
 // import './App.css';
-import { Box } from "@material-ui/core";
+import { Box, Container } from "@material-ui/core";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import Hero from "./components/Hero";
 import { fetch_user_data } from "./redux";
 import { AllRoutes } from "./routes/Routes";
 
@@ -16,10 +17,11 @@ function App(props) {
   return (
     <div className="App">
       <Header login={props.login} />
+      <Hero />
       <Box mt={2} mb={10}>
-        {AllRoutes()}
-      </ Box>
-      <Footer    />
+        <Container maxWidth="lg">{AllRoutes()}</Container>
+      </Box>
+      <Footer />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
+import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -109,7 +110,7 @@ export default function Header({ login }) {
   };
 
   const menuId = "primary-search-account-menu";
-  const renderMenu = login && (
+  const renderMenu = login ? (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -122,7 +123,32 @@ export default function Header({ login }) {
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
+  ) : (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem component={NavLink} to="login">
+        Sign In
+      </MenuItem>
+      <MenuItem component={NavLink} to="register">
+        Register
+      </MenuItem>
+    </Menu>
   );
+  const searchKeyPressed = (e) => {
+    if (e.keyCode === 13) {
+      var search_text = e.target.value;
+      search_text.length > 0
+        ? navigate(`search/${search_text}`)
+        : swal("Invalid search key");
+    }
+  };
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -189,7 +215,7 @@ export default function Header({ login }) {
             color="inherit"
             aria-label="open drawer"
           >
-            <LocalMallIcon />
+            <LocalMallIcon onClick={() => navigate("/")} />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             Xmart Shopping Plaza
@@ -205,6 +231,7 @@ export default function Header({ login }) {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onKeyDown={searchKeyPressed}
             />
           </div>
           <div className={classes.grow} />

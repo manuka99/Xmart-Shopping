@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="Register" groupId="com.xmart.auth_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/Register.xml</file>
+    </artifact>
+    <artifact name="Auth" groupId="com.xmart.auth_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/Auth.xml</file>
+    </artifact>
+    <artifact name="Login" groupId="com.xmart.auth_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/Login.xml</file>
+    </artifact>
+    <artifact name="ValidateToken" groupId="com.xmart.auth_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ValidateToken.xml</file>
+    </artifact>
+    <artifact name="Profile" groupId="com.xmart.auth_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/Profile.xml</file>
+    </artifact>
+    <artifact name="Logout" groupId="com.xmart.auth_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/Logout.xml</file>
+    </artifact>
+</artifacts>

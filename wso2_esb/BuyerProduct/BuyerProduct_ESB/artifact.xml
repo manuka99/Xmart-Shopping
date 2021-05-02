@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="ListAllProducts" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ListAllProducts.xml</file>
+    </artifact>
+    <artifact name="ViewProduct" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ViewProduct.xml</file>
+    </artifact>
+    <artifact name="AddToCart" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/AddToCart.xml</file>
+    </artifact>
+    <artifact name="ViewCart" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ViewCart.xml</file>
+    </artifact>
+    <artifact name="UpdateCart" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/UpdateCart.xml</file>
+    </artifact>
+    <artifact name="ProductApi" groupId="com.xmart.product_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/ProductApi.xml</file>
+    </artifact>
+    <artifact name="CartApi" groupId="com.xmart.product_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/CartApi.xml</file>
+    </artifact>
+</artifacts>

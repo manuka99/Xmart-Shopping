@@ -45,7 +45,7 @@ export const fetch_user_data = () => {
   return (dispatch) => {
     dispatch(fetch_auth_user_data_request());
     axios
-      .post(`${APP_BASE_URL}/api/auth/validateToken`, {
+      .post(`${APP_BASE_URL}/auth/validateToken`, {
         token: localStorage.getItem(XMART_USER_TOKEN),
       })
       .then((res) => {

@@ -10,6 +10,7 @@ import Chip from "@material-ui/core/Chip";
 import CategoryIcon from "@material-ui/icons/Category";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
+import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,17 @@ export default function Index() {
       .catch((err) => setProduct({}));
   }, [pid]);
 
+  const addToCart = (product) => {
+    Api()
+      .post("/cart/add", { products: [{ id: product._id, quantity: 1 }] })
+      .then((res) => swal("Product was added to cart"))
+      .catch((err) =>
+        swal(
+          "Product was not added to the cart, you must be authenticated and the product must have enough stock"
+        )
+      );
+  };
+
   return product._id ? (
     <Card className={classes.root}>
       <div className={classes.details}>
@@ -71,7 +83,12 @@ export default function Index() {
             color="primary"
           />
           <Box mt={4}>
-            <Button size="small" color="primary" variant="contained">
+            <Button
+              onClick={() => addToCart(product)}
+              size="small"
+              color="primary"
+              variant="contained"
+            >
               Add to cart
             </Button>
           </Box>

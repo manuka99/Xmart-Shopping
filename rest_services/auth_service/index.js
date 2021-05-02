@@ -11,28 +11,29 @@ const app = express();
 // middlewares
 app.use(body_parser.json());
 app.use(cors());
+
 app.use(passport.initialize());
 require("./middlewares/Passport")(passport);
 
 // routes
 app.use("/api/auth", require("./routes/Auth"));
 
-const startApp = async() => {
-    try {
-        // connect db
-        await connect(DB, {
-            useFindAndModify: true,
-            useUnifiedTopology: true,
-            useNewUrlParser: true,
-        });
+const startApp = async () => {
+  try {
+    // connect db
+    await connect(DB, {
+      useFindAndModify: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
 
-        console.log("Connected to database");
+    console.log("Connected to database");
 
-        await app.listen(PORT, () => console.log(`App is running on port ${PORT}`));
-    } catch (error) {
-        console.error("Database connectivity failed", error);
-        startApp();
-    }
+    await app.listen(PORT, () => console.log(`App is running on port ${PORT}`));
+  } catch (error) {
+    console.error("Database connectivity failed", error);
+    startApp();
+  }
 };
 
 // start the app

@@ -12,6 +12,7 @@ import Api from "../../util/Api";
 import { useNavigate } from "react-router";
 import Chip from "@material-ui/core/Chip";
 import CategoryIcon from "@material-ui/icons/Category";
+import swal from "sweetalert";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,15 +46,26 @@ export default function Index({ oldProducts }) {
     // eslint-disable-next-line
   }, []);
 
+  const addToCart = (product) => {
+    Api()
+      .post("/cart/add", { products: [{ id: product._id, quantity: 1 }] })
+      .then((res) => swal("Product was added to cart"))
+      .catch((err) =>
+        swal(
+          "Product was not added to the cart, you must be authenticated and the product must have enough stock"
+        )
+      );
+  };
+
   return (
     <React.Fragment>
       <CssBaseline />
       <main>
         {/* End hero unit */}
-        <Grid container spacing={4}>
+        <Grid container spacing={6}>
           {products.map((product) => (
             <Grid item key={product._id} xs={12} sm={4} md={3}>
-              <Card className={classes.card}>
+              <Card elevation={4} className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}
                   image={product.image}
@@ -85,7 +97,12 @@ export default function Index({ oldProducts }) {
                   >
                     View
                   </Button>
-                  <Button size="small" color="primary" variant="contained">
+                  <Button
+                    onClick={() => addToCart(product)}
+                    size="small"
+                    color="primary"
+                    variant="contained"
+                  >
                     Add to cart
                   </Button>
                 </CardActions>

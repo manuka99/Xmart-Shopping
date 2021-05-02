@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/auth" name="Auth" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/register">
+        <inSequence>
+            <send>
+                <endpoint key="Register"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/login">
+        <inSequence>
+            <send>
+                <endpoint key="Login"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/validateToken">
+        <inSequence>
+            <send>
+                <endpoint key="ValidateToken"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/profile">
+        <inSequence>
+            <send>
+                <endpoint key="Profile"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/logout">
+        <inSequence>
+            <send>
+                <endpoint key="Logout"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

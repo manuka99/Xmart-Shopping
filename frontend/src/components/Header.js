@@ -18,6 +18,9 @@ import LocalMallIcon from "@material-ui/icons/LocalMall";
 import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import swal from "sweetalert";
+import { XMART_USER_TOKEN } from "../util/AppConstants";
+import store from "../redux/store";
+import { user_logout } from "../redux";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -109,6 +112,19 @@ export default function Header({ login }) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogout = () => {
+    // Api()
+    //   .post("/auth/logout")
+    //   .then((res) => {
+    //     swal(res.data.message);
+    //     navigate("/login");
+    //   })
+    //   .catch((err) => console.log(err));
+    localStorage.removeItem(XMART_USER_TOKEN);
+    navigate("/login");
+    store.dispatch(user_logout());
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = login ? (
     <Menu
@@ -122,6 +138,7 @@ export default function Header({ login }) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   ) : (
     <Menu
@@ -161,9 +178,9 @@ export default function Header({ login }) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={() => navigate("cart")}>
         <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={login ? 4 : 0} color="secondary">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -237,7 +254,11 @@ export default function Header({ login }) {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
+              <Badge
+                onClick={() => navigate("cart")}
+                badgeContent={login ? 4 : 0}
+                color="secondary"
+              >
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>

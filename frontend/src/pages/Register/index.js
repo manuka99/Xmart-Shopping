@@ -40,19 +40,19 @@ const useStyles = makeStyles((theme) => ({
 export default function Index() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState({});
+  const [registerInfo, setRegisterInfo] = useState({});
 
   const handleForm = (event) => {
-    setLoginInfo({
-      ...loginInfo,
+    setRegisterInfo({
+      ...registerInfo,
       [event.target.name]: event.target.value,
     });
   };
 
   const registerSubmit = () => {
-    if (loginInfo.email && loginInfo.password)
+    if (registerInfo.email && registerInfo.password)
       Api()
-        .post("/auth/register", loginInfo)
+        .post("/auth/register", registerInfo)
         .then((res) => {
           console.log(res);
           if (res.data.user) {
@@ -65,7 +65,11 @@ export default function Index() {
             navigate("/");
           } else swal("Registration failed");
         })
-        .catch((err) => console.log(err));
+        .catch((err) =>
+          err.response && err.response.data
+            ? swal(err.response.data.message)
+            : swal("Registration failed")
+        );
     else swal("Enter email and password");
   };
 

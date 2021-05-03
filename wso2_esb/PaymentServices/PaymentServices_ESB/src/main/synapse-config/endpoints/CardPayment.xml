@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<endpoint name="UpdateCart" xmlns="http://ws.apache.org/ns/synapse">
-    <http method="post" uri-template="http://localhost:5001/api/cart/">
+<endpoint name="CardPayment" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="http://localhost:5003/api/gateway/card">
         <suspendOnFailure>
             <initialDuration>-1</initialDuration>
             <progressionFactor>1.0</progressionFactor>

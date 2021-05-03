@@ -20,4 +20,16 @@
     <artifact name="CartApi" groupId="com.xmart.product_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/api/CartApi.xml</file>
     </artifact>
+    <artifact name="NewOrder" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/NewOrder.xml</file>
+    </artifact>
+    <artifact name="ViewOrder" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ViewOrder.xml</file>
+    </artifact>
+    <artifact name="SaveOrderDetails" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/SaveOrderDetails.xml</file>
+    </artifact>
+    <artifact name="OrderApi" groupId="com.xmart.product_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/OrderApi.xml</file>
+    </artifact>
 </artifacts>

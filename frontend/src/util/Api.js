@@ -9,7 +9,7 @@ export default function Api(nonApi = true) {
     timeout: 5000,
     headers: {
       Authorization: `Bearer ${user_token}`,
-      // "Content-Type": "application/json",
+      "Content-Type": "application/json",
     },
   });
 
@@ -38,8 +38,8 @@ export default function Api(nonApi = true) {
         } else if (error.response.status === 419) {
           swal("Unexpected error 419: Refresh the webpage and try again");
         } else if (error.response.status === 422) {
-          if (error.response.data) swal(error.response.data.message);
-          //   return Promise.reject(error);
+          // if (error.response.data) swal(error.response.data.message);
+          return Promise.reject(error);
         } else if (error.response.status === 423) {
           //password confirmation
           return Promise.reject(error);

@@ -48,7 +48,7 @@ exports.getCart = async (req, res) => {
         }
       }
     }
-    return res.status(200).json(cart);
+    return res.status(200).json(cart ? cart : {});
   } catch (error) {
     console.error(error);
     return res.status(422).json({ message: "User cart not found" });
@@ -76,7 +76,9 @@ exports.storeToCart = async (req, res) => {
       }
       var result = await cart.save();
       if (result && result.error) return res.status(422).json(result);
-      return res.status(200).json({ message: "All changes was saved" });
+      return res
+        .status(200)
+        .json({ message: "All changes was saved", result: result._doc });
     } else return res.status(422).json(errors);
   } catch (error) {
     console.error(error);

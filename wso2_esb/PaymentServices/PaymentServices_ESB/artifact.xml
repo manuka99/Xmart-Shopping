@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="CODPayment" groupId="com.xmart.payment_services_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/CODPayment.xml</file>
+    </artifact>
+    <artifact name="CardPayment" groupId="com.xmart.payment_services_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/CardPayment.xml</file>
+    </artifact>
+    <artifact name="MobilePayment" groupId="com.xmart.payment_services_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/MobilePayment.xml</file>
+    </artifact>
+    <artifact name="PaymentAPI" groupId="com.xmart.payment_services_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/PaymentAPI.xml</file>
+    </artifact>
+</artifacts>

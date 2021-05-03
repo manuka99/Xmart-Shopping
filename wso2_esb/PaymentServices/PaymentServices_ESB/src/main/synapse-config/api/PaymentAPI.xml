@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/payment" name="PaymentAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/">
+        <inSequence>
+            <property expression="json-eval($.payment_type)" name="Payment_Type" scope="default" type="STRING"/>
+            <switch source="get-property('Payment_Type')">
+                <case regex="card">
+                    <log description="card log">
+                        <property expression="fn:concat('Routing to ', get-property('Payment_Type'))" name="message"/>
+                    </log>
+                    <send>
+                        <endpoint key="CardPayment"/>
+                    </send>
+                </case>
+                <case regex="mobile">
+                    <log description="mobile log">
+                        <property expression="fn:concat('Routing to ', get-property('Payment_Type'))" name="message"/>
+                    </log>
+                    <send>
+                        <endpoint key="MobilePayment"/>
+                    </send>
+                </case>
+                <case regex=".*+COD">
+                    <log description="COD log">
+                        <property expression="fn:concat('Routing to ', get-property('Payment_Type'))" name="message"/>
+                    </log>
+                    <send>
+                        <endpoint key="CODPayment"/>
+                    </send>
+                </case>
+                <default>
+                    <log description="Fault log">
+                        <property expression="fn:concat('Invalid payment type - ', get-property('Payment_Type'))" name="message"/>
+                    </log>
+                    <respond/>
+                </default>
+            </switch>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

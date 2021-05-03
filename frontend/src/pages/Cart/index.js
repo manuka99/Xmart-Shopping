@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
 import Api from "../../util/Api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@material-ui/core";
+import swal from "sweetalert";
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     flex: "1 0 auto",
   },
   cover: {
-    width: 151,
+    width: 150,
   },
   controls: {
     display: "flex",
@@ -39,16 +40,12 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(1),
   },
-  playIcon: {
-    height: 38,
-    width: 38,
-  },
 }));
 
 export default function Index() {
   const [cart, setCart] = useState({});
   const classes = useStyles();
-  const theme = useTheme();
+  const navigate = useNavigate();
 
   useEffect(() => {
     Api()
@@ -57,7 +54,39 @@ export default function Index() {
       .catch((err) => console.log(err));
   }, []);
 
-  const checkOut = () => {};
+  const updateCart = () => {
+    console.log(cart);
+    Api()
+      .post("/cart", cart)
+      .then((res) => swal(res.data.message))
+      .catch((err) => console.log(err));
+  };
+
+  const checkOut = () => {
+    Api()
+      .post("/order", { products: cart.products })
+      .then((res) => navigate(`/order/${res.data._id}`))
+      .catch((err) => console.log(err));
+  };
+
+  const updateQty = (index, type) => {
+    var newCart = cart;
+    if (type === "-")
+      newCart.products[index].quantity = newCart.products[index].quantity - 1;
+    else
+      newCart.products[index].quantity = newCart.products[index].quantity + 1;
+    if (newCart.products[index].quantity < 1) {
+      newCart.products[index].quantity = 1;
+      swal("Minimum product quantity must be 1");
+    }
+    setCart({ ...newCart });
+  };
+
+  const deleteProduct = (index) => {
+    var newCartProducts = cart.products;
+    newCartProducts.splice(index, 1);
+    setCart({ ...cart, products: newCartProducts });
+  };
 
   return (
     <>
@@ -77,43 +106,60 @@ export default function Index() {
                   <Typography variant="subtitle1" color="textSecondary">
                     Rs {product.data.price}
                   </Typography>
+                  <Button
+                    aria-label="delete"
+                    size="small"
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => deleteProduct(index)}
+                  >
+                    Delete <DeleteForeverIcon color="secondary" />
+                  </Button>
                 </CardContent>
                 <div className={classes.controls}>
-                  <IconButton aria-label="previous">
-                    {theme.direction === "rtl" ? (
-                      <SkipNextIcon />
-                    ) : (
-                      <SkipPreviousIcon />
-                    )}
+                  <IconButton
+                    aria-label="-"
+                    onClick={() => updateQty(index, "-")}
+                  >
+                    <IndeterminateCheckBoxIcon color="secondary" />
                   </IconButton>
-                  <IconButton aria-label="play/pause">
-                    <PlayArrowIcon className={classes.playIcon} />
+                  <IconButton aria-label={product.quantity} size="small">
+                    {product.quantity}
                   </IconButton>
-                  <IconButton aria-label="next">
-                    {theme.direction === "rtl" ? (
-                      <SkipPreviousIcon />
-                    ) : (
-                      <SkipNextIcon />
-                    )}
+                  <IconButton
+                    aria-label="+"
+                    onClick={() => updateQty(index, "+")}
+                  >
+                    <AddBoxIcon color="primary" />
                   </IconButton>
                 </div>
               </div>
               <CardMedia
                 className={classes.cover}
                 image={product.data.image}
-                title="Live from space album cover"
+                title={product.data.name}
               />
             </Card>
           ))}
         {cart && (
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={checkOut}
-          >
-            Checkout ( Rs {cart.payment_value})
-          </Button>
+          <>
+            <Button
+              variant="outlined"
+              color="primary"
+              size="large"
+              onClick={updateCart}
+            >
+              Update cart
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={checkOut}
+            >
+              Checkout ( Rs {cart.payment_value})
+            </Button>
+          </>
         )}
       </div>
     </>

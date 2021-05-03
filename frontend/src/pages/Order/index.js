@@ -89,7 +89,7 @@ export default function Index() {
     else if (activeStep === 1) {
       Api()
         .post(`/payment`, {
-          payment,
+          ...payment,
           order_id: oid,
           transfer_amount: order.payment_value,
           payment_type: order.payment_type,
@@ -156,7 +156,7 @@ export default function Index() {
                     Thank you for your order.
                   </Typography>
                   <Typography variant="subtitle1">
-                    Your order number is #2001539. We have emailed your order
+                    Your order number is #{oid}. We have emailed your order
                     confirmation, and will send you an update when your order
                     has shipped.
                   </Typography>

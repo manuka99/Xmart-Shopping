@@ -58,7 +58,10 @@ export default function Index() {
     console.log(cart);
     Api()
       .post("/cart", cart)
-      .then((res) => swal(res.data.message))
+      .then((res) => {
+        swal(res.data.message);
+        setCart({ ...cart, payment_value: res.data.cart.payment_value });
+      })
       .catch((err) => console.log(err));
   };
 

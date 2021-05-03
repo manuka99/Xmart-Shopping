@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<endpoint name="CODPayment" xmlns="http://ws.apache.org/ns/synapse">
-    <http method="post" uri-template="http://localhost:5001/api/payment/pay/cod">
+<endpoint name="NotifyPaymentFromGateway" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="http://localhost:5001/api/payment/notify">
         <suspendOnFailure>
             <initialDuration>-1</initialDuration>
             <progressionFactor>1.0</progressionFactor>

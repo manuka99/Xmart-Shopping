@@ -20,7 +20,7 @@
                         <endpoint key="MobilePayment"/>
                     </send>
                 </case>
-                <case regex=".*+COD">
+                <case regex="COD">
                     <log description="COD log">
                         <property expression="fn:concat('Routing to ', get-property('Payment_Type'))" name="message"/>
                     </log>
@@ -35,6 +35,34 @@
                     <respond/>
                 </default>
             </switch>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/gateway/mobile/request-pin/{number}">
+        <inSequence>
+            <log>
+                <property name="message" value="Routing to request pin"/>
+            </log>
+            <send>
+                <endpoint key="RequestMobilePin"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/notify/server">
+        <inSequence>
+            <log>
+                <property name="message" value="Routing to notify payment"/>
+            </log>
+            <send>
+                <endpoint key="NotifyPaymentFromGateway"/>
+            </send>
         </inSequence>
         <outSequence>
             <send/>

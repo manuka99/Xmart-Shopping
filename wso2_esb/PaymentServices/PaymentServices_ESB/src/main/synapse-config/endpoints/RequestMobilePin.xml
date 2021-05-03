@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<endpoint name="CODPayment" xmlns="http://ws.apache.org/ns/synapse">
-    <http method="post" uri-template="http://localhost:5001/api/payment/pay/cod">
+<endpoint name="RequestMobilePin" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="http://localhost:5004/api/gateway/mobile/request-pin/{uri.var.number}">
         <suspendOnFailure>
             <initialDuration>-1</initialDuration>
             <progressionFactor>1.0</progressionFactor>

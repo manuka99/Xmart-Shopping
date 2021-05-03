@@ -1,6 +1,7 @@
 var md5 = require("md5");
 const { PAYMENT_SECRET } = require("../config");
 const Order = require("../model/Order");
+const { validateOrderDetails } = require("../util/Order");
 const { notifyPaymentSuccessfull } = require("../util/Payment");
 
 // sent from payment gateways
@@ -42,15 +43,19 @@ exports.codPayment = async (req, res) => {
       order,
       req.user
     );
-    validatedOrder.payment_status = "pending";
-    validatedOrder.order_status = "validating";
-    validatedOrder.payment_type = "COD";
-    await validatedOrder.save();
-    // send email and mobile sms after completing payment
-    notifyPaymentSuccessfull(validatedOrder);
-    return res.status(200).json({ message: "Order was placed successfully" });
+    if (Object.keys(errors) == 0) {
+      validatedOrder.payment_status = "pending";
+      validatedOrder.order_status = "validating";
+      validatedOrder.payment_type = "COD";
+      await validatedOrder.save();
+      // send email and mobile sms after completing payment
+      notifyPaymentSuccessfull(validatedOrder);
+    } else throw new Error("Invalid order");
+    return res
+      .status(200)
+      .json({ message: "Order was placed successfully", status: 1 });
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ message: "Payment failed" });
+    return res.status(422).json({ errors: { message: "Payment failed" } });
   }
 };

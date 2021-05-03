@@ -1,6 +1,6 @@
 var md5 = require("md5");
 const { default: axios } = require("axios");
-const { PAYMENT_SECRET } = require("../config");
+const { PAYMENT_SECRET, PAYMENT_NOTIFY_URL } = require("../config");
 const Card = require("../models/Card");
 const { validatePaymentRequest } = require("../util/GatewayValidations");
 
@@ -49,7 +49,7 @@ const notifyServer = (orderID, transfer_amount) => {
   var hash_pay_code = md5(`${PAYMENT_SECRET}${orderID}${transfer_amount}`);
   console.log(hash_pay_code);
   axios
-    .post("http://localhost:5001/api/payment/notify", {
+    .post(PAYMENT_NOTIFY_URL, {
       order_id: orderID,
       payment_type: "card",
       hash_pay_code,

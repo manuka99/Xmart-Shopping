@@ -59,9 +59,16 @@ exports.getCart = async (req, res) => {
 exports.storeToCart = async (req, res) => {
   try {
     var cart = await Cart.findOne({ user_id: req.user._id });
-    // validate the products in the cart
+
+    // validate the products in the cart if it has products only
     var { errors, validatedOrder } = await validateOrderProducts(req.body);
-    if (Object.keys(errors) == 0) {
+
+    // Invalid order products means that user have deleted all the products from the cart
+    // we can allow it because the cart can be empty
+    if (
+      Object.keys(errors) == 0 ||
+      errors.message === "Invalid order products"
+    ) {
       if (!cart) {
         // ifthe user does not habve a cart
         cart = new Cart({
@@ -78,7 +85,7 @@ exports.storeToCart = async (req, res) => {
       if (result && result.error) return res.status(422).json(result);
       return res
         .status(200)
-        .json({ message: "All changes was saved", result: result._doc });
+        .json({ message: "All changes was saved", cart: result._doc });
     } else return res.status(422).json(errors);
   } catch (error) {
     console.error(error);

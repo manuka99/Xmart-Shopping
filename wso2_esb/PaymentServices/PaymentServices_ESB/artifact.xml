@@ -11,4 +11,10 @@
     <artifact name="PaymentAPI" groupId="com.xmart.payment_services_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/api/PaymentAPI.xml</file>
     </artifact>
+    <artifact name="RequestMobilePin" groupId="com.xmart.payment_services_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/RequestMobilePin.xml</file>
+    </artifact>
+    <artifact name="NotifyPaymentFromGateway" groupId="com.xmart.payment_services_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/NotifyPaymentFromGateway.xml</file>
+    </artifact>
 </artifacts>

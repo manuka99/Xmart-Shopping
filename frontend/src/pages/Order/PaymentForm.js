@@ -6,11 +6,14 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
 } from "@material-ui/core";
+import Api from "../../util/Api";
+import swal from "sweetalert";
 
 export default function PaymentForm({ order, setOrder, payment, setPayment }) {
   const handleFormOrder = (e) => {
@@ -19,6 +22,19 @@ export default function PaymentForm({ order, setOrder, payment, setPayment }) {
   const handleFormPayment = (e) => {
     setPayment({ ...payment, [e.target.name]: e.target.value });
   };
+
+  const handleRequestPin = () => {
+    payment.mobile_no && payment.mobile_no.length === 9
+      ? Api()
+          .post(`/payment/gateway/mobile/request-pin/${payment.mobile_no}`, {})
+          .then((res) => swal(res.data.message))
+          .catch((err) => {
+            if (err.response && err.response.data && err.response.data.errors)
+              swal(err.response.data.errors.message);
+          })
+      : swal("Enter a valid 9 digit mobile number");
+  };
+
   return (
     <React.Fragment>
       <Box mb={2}>
@@ -50,22 +66,23 @@ export default function PaymentForm({ order, setOrder, payment, setPayment }) {
             <Grid item xs={12} md={6}>
               <TextField
                 required
-                id="card_holder_name"
-                name="card_holder_name"
-                label="Name on card"
+                id="card_no"
+                name="card_no"
+                label="Card number"
                 fullWidth
-                autoComplete="cc-name"
+                autoComplete="cc-number"
                 onChange={handleFormPayment}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
                 required
-                id="card_no"
-                name="card_no"
-                label="Card number"
+                id="card_cvc"
+                name="card_cvc"
+                label="card_cvc"
+                helperText="Last three digits on signature strip"
                 fullWidth
-                autoComplete="cc-number"
+                autoComplete="cc-csc"
                 onChange={handleFormPayment}
               />
             </Grid>
@@ -82,12 +99,11 @@ export default function PaymentForm({ order, setOrder, payment, setPayment }) {
             <Grid item xs={12} md={6}>
               <TextField
                 required
-                id="card_cvc"
-                name="card_cvc"
-                label="card_cvc"
-                helperText="Last three digits on signature strip"
+                id="card_holder_name"
+                name="card_holder_name"
+                label="Name on card"
                 fullWidth
-                autoComplete="cc-csc"
+                autoComplete="cc-name"
                 onChange={handleFormPayment}
               />
             </Grid>
@@ -100,8 +116,53 @@ export default function PaymentForm({ order, setOrder, payment, setPayment }) {
               />
             </Grid>
           </>
+        ) : order.payment_type === "mobile" ? (
+          <>
+            <Grid item xs={6}>
+              <TextField
+                required
+                id="mobile_no"
+                name="mobile_no"
+                label="Mobile number"
+                fullWidth
+                autoComplete="phone"
+                onChange={handleFormPayment}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                size="small"
+                color={
+                  payment.mobile_no && payment.mobile_no.length === 9
+                    ? "primary"
+                    : "secondary"
+                }
+                onClick={handleRequestPin}
+              >
+                Request pin
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                required
+                id="pin"
+                name="pin"
+                label="Pin "
+                helperText="(4 digit pin number sent via sms)"
+                fullWidth
+                autoComplete="pin"
+                onChange={handleFormPayment}
+              />
+            </Grid>
+          </>
         ) : (
-          ""
+          <Typography variant="body1" color="textSecondary">
+            Cash on delivery, sometimes called collect on delivery or cash on
+            demand, is the sale of goods by mail order where payment is made on
+            delivery rather than in advance. If the goods are not paid for, they
+            are returned to the retailer.
+          </Typography>
         )}
       </Grid>
     </React.Fragment>

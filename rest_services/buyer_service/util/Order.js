@@ -40,8 +40,8 @@ exports.validateOrderDetails = async (order, user) => {
 
   if (
     !order ||
-    order.user_id !== user._id ||
-    order.order_status !== "pending"
+    order.user_id !== user._id
+    // || order.order_status !== "pending"
   ) {
     errors.message = "Invalid order";
     return { order, errors };
@@ -85,16 +85,17 @@ exports.validateOrderProducts = async (order) => {
   var errors = {};
   var validatedOrder = order;
   try {
-    if (
-      !order ||
+    if (!order) errors.message = "Invalid order details";
+    else if (
       !order.products ||
       !Array.isArray(order.products) ||
       order.products.length == 0
     )
-      errors.order = "Invalid order details";
+      errors.message = "Invalid order products";
     else {
       var productErrors = [];
       var totalValue = 0;
+      var validateOrderProducts = [];
       for (let index = 0; index < order.products.length; index++) {
         try {
           var orderProduct = order.products[index];
@@ -108,14 +109,24 @@ exports.validateOrderProducts = async (order) => {
             productErrors.push(
               `${orderProduct.id} Product does not have enough stock`
             );
-          else totalValue += product.price * orderProduct.quantity;
+          else {
+            totalValue += product.price * orderProduct.quantity;
+            // to remove unnessory data sent from the frontend( ex description, image)
+            validateOrderProducts.push({
+              id: orderProduct.id,
+              quantity: orderProduct.quantity,
+            });
+          }
         } catch (error) {
           productErrors.push(`${orderProduct.id} Invalid product details`);
         }
       }
 
       if (productErrors.length > 0) errors.productErrors = productErrors;
-      if (Object.keys(errors) == 0) validatedOrder.payment_value = totalValue;
+      if (Object.keys(errors) == 0) {
+        validatedOrder.payment_value = totalValue;
+        validatedOrder.products = validateOrderProducts;
+      }
     }
   } catch (error) {
     errors.product = "Invalid product details";

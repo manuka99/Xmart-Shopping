@@ -27,6 +27,10 @@ const Order = loadable(() => import("../pages/Order"), {
   fallback: <ProgressBar />,
 });
 
+const TrackOrder = loadable(() => import("../pages/Tracker"), {
+  fallback: <ProgressBar />,
+});
+
 const Search = loadable(() => import("../pages/Search"), {
   fallback: <ProgressBar />,
 });
@@ -41,6 +45,7 @@ export const AllRoutes = () => {
       <Route path="/order/:oid" element={<Order />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/track-order" element={<TrackOrder />} />
     </Routes>
   );
 };

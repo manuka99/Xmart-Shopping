@@ -11,9 +11,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Api from "../../util/Api";
 import swal from "sweetalert";
-import { XMART_USER_TOKEN } from "../../util/AppConstants";
-import store from "../../redux/store";
-import { fetch_auth_user_data_success, user_login } from "../../redux";
 import { useNavigate } from "react-router";
 import { Link as Link_NAV } from "react-router-dom";
 

@@ -23,8 +23,13 @@ exports.addToCart = async (req, res) => {
         validatedOrder.payment_value + validatedOrder.payment_value;
     }
     var result = await cart.save();
+
+    // if cart save fail
     if (result && result.error) return res.status(422).json(result);
-    return res.status(200).json({ message: "All changes was saved" });
+
+    return res
+      .status(200)
+      .json({ message: "All changes was saved", cart: result._doc });
   } catch (error) {
     console.error(error);
     return res.status(422).json({ message: "Unexpected error" });

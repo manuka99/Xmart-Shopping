@@ -13,6 +13,8 @@ import { useNavigate } from "react-router";
 import Chip from "@material-ui/core/Chip";
 import CategoryIcon from "@material-ui/icons/Category";
 import swal from "sweetalert";
+import { fetch_cart_data_success } from "../../redux";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Index({ oldProducts }) {
+function Index({ oldProducts, fetch_cart_data_success }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [products, setProducts] = useState(oldProducts ? oldProducts : []);
@@ -49,7 +51,10 @@ export default function Index({ oldProducts }) {
   const addToCart = (product) => {
     Api()
       .post("/cart/add", { products: [{ id: product._id, quantity: 1 }] })
-      .then((res) => swal("Product was added to cart"))
+      .then((res) => {
+        swal("Product was added to cart");
+        fetch_cart_data_success(res.data.cart);
+      })
       .catch((err) =>
         swal(
           "Product was not added to the cart, you must be authenticated and the product must have enough stock"
@@ -61,7 +66,6 @@ export default function Index({ oldProducts }) {
     <React.Fragment>
       <CssBaseline />
       <main>
-        {/* End hero unit */}
         <Grid container spacing={6}>
           {products.map((product) => (
             <Grid item key={product._id} xs={12} sm={4} md={3}>
@@ -116,3 +120,11 @@ export default function Index({ oldProducts }) {
     </React.Fragment>
   );
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetch_cart_data_success: (data) => dispatch(fetch_cart_data_success(data)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Index);

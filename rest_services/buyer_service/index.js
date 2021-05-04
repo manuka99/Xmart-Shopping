@@ -11,27 +11,27 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/api/product", require("./routes/ProductRoutes"));
-app.use("/api/order", userAuth, require("./routes/OrderRoutes"));
-app.use("/api/cart", userAuth, require("./routes/CartRoutes"));
+app.use("/api/order", require("./routes/OrderRoutes"));
+app.use("/api/cart", require("./routes/CartRoutes"));
 app.use("/api/payment", require("./routes/PaymentRoutes.js"));
 
-const startApp = async() => {
-    try {
-        await connect(DB, {
-            useFindAndModify: true,
-            useUnifiedTopology: true,
-            useNewUrlParser: true,
-        });
+const startApp = async () => {
+  try {
+    await connect(DB, {
+      useFindAndModify: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
 
-        console.log("Connected to database");
+    console.log("Connected to database");
 
-        await app.listen(PORT, () =>
-            console.log(`App is listening on port ${PORT}`)
-        );
-    } catch (error) {
-        console.error(error);
-        startApp();
-    }
+    await app.listen(PORT, () =>
+      console.log(`App is listening on port ${PORT}`)
+    );
+  } catch (error) {
+    console.error(error);
+    startApp();
+  }
 };
 
 startApp();

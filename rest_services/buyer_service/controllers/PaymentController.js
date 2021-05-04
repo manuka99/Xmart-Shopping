@@ -24,6 +24,7 @@ exports.paymentOrderNotification = async (req, res) => {
       // complete order if hashed matches
       console.log("Valid payment");
       order.payment_status = "paid";
+      order.delivery_status = "packing";
       order.order_status = "validating";
       order.payment_type = req.body.payment_type;
       var result = await order.save();
@@ -61,6 +62,7 @@ exports.codPayment = async (req, res) => {
     var validatedOrder = OrderValidator.ValidateOrderDetails(req_data, res);
 
     order.payment_status = "pending";
+    order.delivery_status = "packing";
     order.order_status = "validating";
     order.payment_type = "COD";
     var result = await order.save();

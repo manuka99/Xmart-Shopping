@@ -12,6 +12,8 @@ import swal from "sweetalert";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import IndeterminateCheckBoxIcon from "@material-ui/icons/IndeterminateCheckBox";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { fetch_cart_data_success } from "../../redux";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -42,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Index() {
+function Index({ fetch_cart_data_success }) {
   const [cart, setCart] = useState({});
   const classes = useStyles();
   const navigate = useNavigate();
@@ -61,6 +63,7 @@ export default function Index() {
       .then((res) => {
         swal(res.data.message);
         setCart({ ...cart, payment_value: res.data.cart.payment_value });
+        fetch_cart_data_success(res.data.cart);
       })
       .catch((err) => console.log(err));
   };
@@ -168,3 +171,11 @@ export default function Index() {
     </>
   );
 }
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetch_cart_data_success: (data) => dispatch(fetch_cart_data_success(data)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Index);

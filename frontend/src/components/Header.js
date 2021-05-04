@@ -20,7 +20,8 @@ import { NavLink } from "react-router-dom";
 import swal from "sweetalert";
 import { XMART_USER_TOKEN } from "../util/AppConstants";
 import store from "../redux/store";
-import { user_logout } from "../redux";
+import { fetch_cart_data, user_logout } from "../redux";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -86,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header({ login }) {
+function Header({ login, cart }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -113,17 +114,21 @@ export default function Header({ login }) {
   };
 
   const handleLogout = () => {
-    // Api()
-    //   .post("/auth/logout")
-    //   .then((res) => {
-    //     swal(res.data.message);
-    //     navigate("/login");
-    //   })
-    //   .catch((err) => console.log(err));
     localStorage.removeItem(XMART_USER_TOKEN);
     navigate("/login");
     store.dispatch(user_logout());
   };
+
+  // useEffect(() => {
+  //   Api()
+  //     .get("/cart")
+  //     .then((res) =>
+  //       res.data.products
+  //         ? setCartItems(res.data.products.length)
+  //         : setCartItems(0)
+  //     )
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = login ? (
@@ -180,7 +185,10 @@ export default function Header({ login }) {
     >
       <MenuItem onClick={() => navigate("cart")}>
         <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={login ? 4 : 0} color="secondary">
+          <Badge
+            badgeContent={cart.products ? cart.products.length : 0}
+            color="secondary"
+          >
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -256,7 +264,7 @@ export default function Header({ login }) {
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge
                 onClick={() => navigate("cart")}
-                badgeContent={login ? 4 : 0}
+                badgeContent={cart.products ? cart.products.length : 0}
                 color="secondary"
               >
                 <ShoppingCartIcon />
@@ -296,3 +304,17 @@ export default function Header({ login }) {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    cart: state.cart,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetch_cart_data: () => dispatch(fetch_cart_data()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   btnOrange: {
-    color: "black",
+    color: "white",
     backgroundColor: "orange",
   },
 }));
@@ -65,12 +65,11 @@ export default function Hero() {
                 <Grid item>
                   <Button
                     component={Link}
-                    to="register"
-                    variant="outlined"
-                    color="primary"
+                    to="track-order"
+                    variant="contained"
                     className={classes.btnOrange}
                   >
-                    Register
+                    Track your order
                   </Button>
                 </Grid>
               </Grid>

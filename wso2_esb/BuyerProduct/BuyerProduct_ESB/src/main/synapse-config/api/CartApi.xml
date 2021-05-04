@@ -2,6 +2,9 @@
 <api context="/cart" name="CartApi" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="POST" uri-template="/add">
         <inSequence>
+            <log description="add to cart">
+                <property name="message" value="Routing to add to cart"/>
+            </log>
             <send>
                 <endpoint key="AddToCart"/>
             </send>
@@ -13,6 +16,9 @@
     </resource>
     <resource methods="GET" uri-template="/">
         <inSequence>
+            <log description="view my cart log">
+                <property name="message" value="Routing to view cart"/>
+            </log>
             <send>
                 <endpoint key="ViewCart"/>
             </send>
@@ -24,6 +30,9 @@
     </resource>
     <resource methods="POST" uri-template="/">
         <inSequence>
+            <log description="update cart logs">
+                <property name="message" value="Routing to save my cart"/>
+            </log>
             <send>
                 <endpoint key="UpdateCart"/>
             </send>

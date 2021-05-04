@@ -1,12 +1,8 @@
 const { getAuthUserFromBearerToken } = require("../util/Auth");
 
-const userAuth = async(req, res, next) => {
-    // get the auth user from token by the auth service
-    let user = await getAuthUserFromBearerToken(req.header("authorization"));
-    if (user) {
-        req.user = user;
-        return next();
-    } else return res.send(401, "Unauthorized");
+const userAuth = async (req, res, next) => {
+  if (req.user && req.user._id.length > 0) return next();
+  else return res.send(401, "Unauthorized");
 };
 
 module.exports = userAuth;

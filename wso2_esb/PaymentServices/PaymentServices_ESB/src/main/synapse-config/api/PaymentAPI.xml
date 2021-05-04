@@ -43,7 +43,7 @@
     </resource>
     <resource methods="POST" uri-template="/gateway/mobile/request-pin/{number}">
         <inSequence>
-            <log>
+            <log description="request pin log">
                 <property name="message" value="Routing to request pin"/>
             </log>
             <send>
@@ -57,7 +57,7 @@
     </resource>
     <resource methods="POST" uri-template="/notify/server">
         <inSequence>
-            <log>
+            <log description="notify server logs">
                 <property name="message" value="Routing to notify payment"/>
             </log>
             <send>

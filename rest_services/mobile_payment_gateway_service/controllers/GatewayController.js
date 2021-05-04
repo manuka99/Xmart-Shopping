@@ -84,7 +84,7 @@ exports.requestPin = async (req, res) => {
       body: `Your XMart Payment Pin is - ${pin}`,
     };
 
-    // sendSms(smsOptions);
+    sendSms(smsOptions);
 
     return res.status(200).json({
       message: "Pin was sent successfull",

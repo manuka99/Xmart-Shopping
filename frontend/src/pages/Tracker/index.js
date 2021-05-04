@@ -96,7 +96,11 @@ export default function Index() {
               <b>Products Details</b>
             </Typography>
             {order.products.map((product) => (
-              <a href={`http://localhost:3000/` + product.id} target="_blank">
+              <a
+                href={`http://localhost:3000/` + product.id}
+                target="_blank"
+                rel="noreferrer"
+              >
                 (Qty * {product.quantity}) http://localhost:3000/{product.id}
               </a>
             ))}

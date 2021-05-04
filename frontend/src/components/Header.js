@@ -19,7 +19,6 @@ import { useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import swal from "sweetalert";
 import { XMART_USER_TOKEN } from "../util/AppConstants";
-import store from "../redux/store";
 import { fetch_cart_data, user_logout } from "../redux";
 import { connect } from "react-redux";
 
@@ -87,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header({ login, cart }) {
+function Header({ login, cart, user_logout }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -116,7 +115,7 @@ function Header({ login, cart }) {
   const handleLogout = () => {
     localStorage.removeItem(XMART_USER_TOKEN);
     navigate("/login");
-    store.dispatch(user_logout());
+    user_logout();
   };
 
   // useEffect(() => {
@@ -308,12 +307,14 @@ function Header({ login, cart }) {
 const mapStateToProps = (state) => {
   return {
     cart: state.cart,
+    login: state.currentUser.login,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetch_cart_data: () => dispatch(fetch_cart_data()),
+    user_logout: () => dispatch(user_logout()),
   };
 };
 

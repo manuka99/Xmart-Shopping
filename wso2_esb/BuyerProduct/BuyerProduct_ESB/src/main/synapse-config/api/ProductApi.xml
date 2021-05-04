@@ -2,6 +2,9 @@
 <api context="/product" name="ProductApi" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="GET" uri-template="/">
         <inSequence>
+            <log description="get all products">
+                <property name="message" value="Routing to get all products"/>
+            </log>
             <send>
                 <endpoint key="ListAllProducts"/>
             </send>
@@ -13,8 +16,25 @@
     </resource>
     <resource methods="GET" uri-template="/{pid}">
         <inSequence>
+            <log description="view product log">
+                <property name="message" value="Routing to view product"/>
+            </log>
             <send>
                 <endpoint key="ViewProduct"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/search/{text}">
+        <inSequence>
+            <log description="search product">
+                <property name="message" value="Routing to search product"/>
+            </log>
+            <send>
+                <endpoint key="SearchProduct"/>
             </send>
         </inSequence>
         <outSequence>

@@ -2,6 +2,9 @@
 <api context="/order" name="OrderApi" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="POST" uri-template="/">
         <inSequence>
+            <log description="new order log">
+                <property name="message" value="Routing to new order"/>
+            </log>
             <send>
                 <endpoint key="NewOrder"/>
             </send>
@@ -13,6 +16,9 @@
     </resource>
     <resource methods="GET" uri-template="/{oid}">
         <inSequence>
+            <log description="view order">
+                <property name="message" value="Routing to view order"/>
+            </log>
             <send>
                 <endpoint key="ViewOrder"/>
             </send>
@@ -24,6 +30,9 @@
     </resource>
     <resource methods="POST" uri-template="/{oid}">
         <inSequence>
+            <log description="save order detailes">
+                <property name="message" value="Routing to save order details"/>
+            </log>
             <send>
                 <endpoint key="SaveOrderDetails"/>
             </send>

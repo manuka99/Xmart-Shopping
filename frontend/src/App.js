@@ -11,13 +11,16 @@ import { AllRoutes } from "./routes/Routes";
 function App(props) {
   useEffect(() => {
     props.fetch_user_data();
-    props.fetch_cart_data();
     // eslint-disable-next-line
   }, []);
+  useEffect(() => {
+    props.fetch_cart_data();
+    // eslint-disable-next-line
+  }, [props.login, props.logout]);
 
   return (
     <div className="App">
-      <Header login={props.login} />
+      <Header />
       <Hero />
       <Box mt={2} mb={10}>
         <Container maxWidth="lg">{AllRoutes()}</Container>

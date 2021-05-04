@@ -2,6 +2,9 @@
 <api context="/auth" name="Auth" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="POST" uri-template="/register">
         <inSequence>
+            <log description="Register log">
+                <property name="message" value="Routing to register"/>
+            </log>
             <send>
                 <endpoint key="Register"/>
             </send>
@@ -13,6 +16,9 @@
     </resource>
     <resource methods="POST" uri-template="/login">
         <inSequence>
+            <log description="login log">
+                <property name="message" value="Routing to login"/>
+            </log>
             <send>
                 <endpoint key="Login"/>
             </send>
@@ -24,6 +30,9 @@
     </resource>
     <resource methods="POST" uri-template="/validateToken">
         <inSequence>
+            <log description="validate token">
+                <property name="message" value="Routing to validate token"/>
+            </log>
             <send>
                 <endpoint key="ValidateToken"/>
             </send>
@@ -35,6 +44,9 @@
     </resource>
     <resource methods="GET" uri-template="/profile">
         <inSequence>
+            <log description="profile log">
+                <property name="message" value="Routing to profile"/>
+            </log>
             <send>
                 <endpoint key="Profile"/>
             </send>
@@ -46,6 +58,9 @@
     </resource>
     <resource methods="POST" uri-template="/logout">
         <inSequence>
+            <log description="logout log">
+                <property name="message" value="Routing to logout"/>
+            </log>
             <send>
                 <endpoint key="Logout"/>
             </send>

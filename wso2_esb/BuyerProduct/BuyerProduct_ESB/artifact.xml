@@ -32,4 +32,7 @@
     <artifact name="OrderApi" groupId="com.xmart.product_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/api/OrderApi.xml</file>
     </artifact>
+    <artifact name="SearchProduct" groupId="com.xmart.product_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/SearchProduct.xml</file>
+    </artifact>
 </artifacts>

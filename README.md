@@ -2,6 +2,8 @@
 
 ## Mern Stack + WSO2 Enterprise Integrator
 
+### Youtube video :movie_camera::boom: : https://youtu.be/tztfJ2cpj5Y 
+
 ### Technologies
 
 1. Node, Express, JWT, Passport.
@@ -33,6 +35,4 @@ request message.
 3. CreditCardPaymentGatewayService
 4. MobilePaymentGatewayService
 
-### Youtube video : https://youtu.be/tztfJ2cpj5Y
-
-### Screenshots
+### Screenshots :camera:

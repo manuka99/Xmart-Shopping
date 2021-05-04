@@ -1,53 +1,7 @@
-const axios = require("axios");
-const {
-  CARD_PAYMENT_GATEWAY,
-  MAIL_USER,
-  MOBILE_PAYMENT_GATEWAY,
-} = require("../config");
+const { MAIL_USER } = require("../config");
 const { sendMail, readHTMLFile } = require("./MailService");
 var handlebars = require("handlebars");
 const { sendSms } = require("./SmsService");
-
-// request the credit cart service using esb  and complete payment
-exports.cardTransfer = async (cardPayment, transfer_amount) => {
-  var errors = {};
-  try {
-    var response = await axios.post(CARD_PAYMENT_GATEWAY, {
-      card_no: cardPayment.card_no,
-      card_cvc: cardPayment.card_cvc,
-      card_holder_name: cardPayment.card_holder_name,
-      transfer_amount: transfer_amount,
-    });
-
-    errors = response.data.errors;
-
-    if (response.data.status == 1) return { errors, completed: true };
-    else return { errors, completed: false };
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-};
-
-// request the mobile transfer service using esb  and complete payment
-exports.mobileTransfer = async (mobilePayment, transfer_amount) => {
-  var errors = {};
-  try {
-    var response = await axios.post(MOBILE_PAYMENT_GATEWAY, {
-      mobile_no: mobilePayment.mobile_no,
-      pin: mobilePayment.pin,
-      transfer_amount: transfer_amount,
-    });
-
-    errors = response.data.errors;
-
-    if (response.data.status == 1) return { errors, completed: true };
-    else return { errors, completed: false };
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-};
 
 // send email and sms notifing payment successfully
 exports.notifyPaymentSuccessfull = async (order) => {
@@ -77,7 +31,27 @@ exports.notifyPaymentSuccessfull = async (order) => {
   // send sms
   var smsOptions = {
     to: order.buyer_phone,
-    body: `Order has been placed - ${order._id}`,
+    body: `Order has been placed Order ID - ${order._id}, Payment value = ${order.payment_value}, Payment type = ${order.payment_type} ,Payment status = ${order.payment_status}, You can track your order by the Order ID through our website. Thank you for shopping with Xmart shopping`,
+  };
+  // sendSms(smsOptions);
+};
+
+// send email and sms notifing payment successfully
+exports.notifyPaymentFailed = async (order) => {
+  var message = `Order has not been placed - ${order._id}, There were errors while placing your order please contact our customer service for assistance`;
+
+  var mailOptions = {
+    from: MAIL_USER,
+    to: order.buyer_email,
+    subject: `Order has not been placed - ${order._id}`,
+    text: message,
+  };
+  sendMail(mailOptions);
+
+  // send sms
+  var smsOptions = {
+    to: order.buyer_phone,
+    body: message,
   };
   // sendSms(smsOptions);
 };

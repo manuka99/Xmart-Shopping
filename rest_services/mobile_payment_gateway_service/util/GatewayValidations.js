@@ -1,23 +1,23 @@
-exports.validatePaymentRequest = (details) => {
-  var errors = {};
-  if (!details) errors.message = "Invalid payment details";
-  else if (Object.keys(this.validateMobileNumber(details.mobile_no)) != 0)
-    errors.message =
-      "Enter a valid 9 digit mobile number, without the initial 0";
-  else if (!details.pin) errors.message = "Enter pin number";
-  else if (isNaN(details.pin)) errors.message = "Invalid pin number";
-  else if (details.pin.length != 4)
-    errors.message = "Pin number should have 4 digits";
-  else if (!details.transfer_amount) errors.message = "Enter transfer amount";
-  else if (isNaN(details.transfer_amount))
-    errors.message = "Invalid transfer amount";
-  return errors;
+exports.validatePaymentRequest = (req, res) => {
+  var message = "";
+  var details = req.body;
+
+  if (!details) message = "Invalid payment details";
+  else if (this.validateMobileNumber(details.mobile_no).length > 0)
+    message = "Enter a valid 9 digit mobile number, without the initial 0";
+  else if (!details.pin) message = "Enter pin number";
+  else if (isNaN(details.pin))
+    message = "Pin number contains invalid characters";
+  else if (details.pin.length != 4) message = "Pin number should have 4 digits";
+  else if (!details.transfer_amount) message = "Enter transfer amount";
+  else if (isNaN(details.transfer_amount)) message = "Invalid transfer amount";
+
+  if (message.length > 0) return res.status(422).json({ message });
+  else return details;
 };
 
 exports.validateMobileNumber = (number) => {
-  var errors = {};
   if (!number || isNaN(number) || number.length != 9)
-    errors.message =
-      "Enter a valid 9 digit mobile number, without the initial 0";
-  return errors;
+    return "Enter a valid 9 digit mobile number, without the initial 0";
+  return "";
 };

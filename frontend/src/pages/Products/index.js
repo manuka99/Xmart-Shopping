@@ -72,10 +72,12 @@ export default function Index({ oldProducts }) {
                   title={product.name}
                 />
                 <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h5">
-                    {product.name}
+                  <Typography gutterBottom variant="subtitle2">
+                    <b> {product.name}</b>
                   </Typography>
-                  <Typography>{product.description}</Typography>
+                  <Typography variant="caption">
+                    {product.description}
+                  </Typography>
                   <Chip
                     size="small"
                     label={`Rs ${product.price}`}

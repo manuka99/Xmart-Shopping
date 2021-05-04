@@ -55,11 +55,8 @@ export default function Index() {
       .then((res) => {
         console.log(res);
         if (res.data.user) {
-          localStorage.setItem(XMART_USER_TOKEN, res.data.token);
-          store.dispatch(fetch_auth_user_data_success({ user: res.data.user }));
-          store.dispatch(user_login());
           swal("You have successfully Registered");
-          navigate("/");
+          navigate("/login");
         } else swal("Registration failed");
       })
       .catch((err) =>

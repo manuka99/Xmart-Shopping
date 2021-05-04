@@ -29,8 +29,8 @@ export default function PaymentForm({ order, setOrder, payment, setPayment }) {
           .post(`/payment/gateway/mobile/request-pin/${payment.mobile_no}`, {})
           .then((res) => swal(res.data.message))
           .catch((err) => {
-            if (err.response && err.response.data && err.response.data.errors)
-              swal(err.response.data.errors.message);
+            if (err.response && err.response.data)
+              swal(err.response.data.message);
           })
       : swal("Enter a valid 9 digit mobile number");
   };

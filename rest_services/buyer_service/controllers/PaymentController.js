@@ -1,15 +1,17 @@
 var md5 = require("md5");
 const { PAYMENT_SECRET } = require("../config");
 const Order = require("../model/Order");
-const { validateOrderDetails } = require("../util/Order");
-const { notifyPaymentSuccessfull } = require("../util/Payment");
+const {
+  notifyPaymentSuccessfull,
+  notifyPaymentFailed,
+} = require("../util/Payment");
+const OrderValidator = require("../validators/OrderValidator");
 
 // sent from payment gateways
 // payement gateways will send info after the payemnt completed
 exports.paymentOrderNotification = async (req, res) => {
   try {
     var order = await Order.findById(req.body.order_id);
-    console.log(order);
 
     // hash paras and validate if the payment was made
     var hash_pay_code_valid = md5(
@@ -24,13 +26,24 @@ exports.paymentOrderNotification = async (req, res) => {
       order.payment_status = "paid";
       order.order_status = "validating";
       order.payment_type = req.body.payment_type;
-      await order.save();
+      var result = await order.save();
+
+      // send error if saving failed
+      if (result && result.error) {
+        notifyPaymentFailed(order);
+        return res.status(422).json(result);
+      }
+
       // send email and mobile sms after completing payment
       notifyPaymentSuccessfull(order);
-    } else console.error("Invalid payment");
+    } else {
+      console.error("Failed to match hash in order");
+      notifyPaymentFailed(order);
+    }
   } catch (error) {
     console.error(error);
     console.error("Invalid payment");
+    notifyPaymentFailed(order);
   }
   return res.status(200).json("ok");
 };
@@ -39,23 +52,32 @@ exports.paymentOrderNotification = async (req, res) => {
 exports.codPayment = async (req, res) => {
   try {
     var order = await Order.findById(req.body.order_id);
-    var { validatedOrder, errors } = await validateOrderDetails(
-      order,
-      req.user
-    );
-    if (Object.keys(errors) == 0) {
-      validatedOrder.payment_status = "pending";
-      validatedOrder.order_status = "validating";
-      validatedOrder.payment_type = "COD";
-      await validatedOrder.save();
-      // send email and mobile sms after completing payment
-      notifyPaymentSuccessfull(validatedOrder);
-    } else throw new Error("Invalid order");
+
+    var req_data = { body: { ...order._doc }, user: { ...req.user } };
+
+    console.log(req_data);
+
+    // validate order details
+    var validatedOrder = OrderValidator.ValidateOrderDetails(req_data, res);
+
+    order.payment_status = "pending";
+    order.order_status = "validating";
+    order.payment_type = "COD";
+    var result = await order.save();
+
+    if (result && result.error) {
+      notifyPaymentFailed(order);
+      return res.status(422).json(result);
+    }
+
+    // send email and mobile sms after completing payment
+    notifyPaymentSuccessfull(order);
     return res
       .status(200)
       .json({ message: "Order was placed successfully", status: 1 });
   } catch (error) {
     console.error(error);
+    notifyPaymentFailed(order);
     return res.status(422).json({ errors: { message: "Payment failed" } });
   }
 };

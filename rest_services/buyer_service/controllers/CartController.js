@@ -1,30 +1,30 @@
 const Cart = require("../model/Cart");
 const Product = require("../model/Product");
-const { validateOrderProducts } = require("../util/Order");
+const OrderValidator = require("../validators/OrderValidator");
 
 exports.addToCart = async (req, res) => {
   try {
     var cart = await Cart.findOne({ user_id: req.user._id });
     // validate the products in the cart
-    var { errors, validatedOrder } = await validateOrderProducts(req.body);
-    if (Object.keys(errors) == 0) {
-      if (!cart) {
-        // ifthe user does not habve a cart
-        cart = new Cart({
-          user_id: req.user._id,
-          products: validatedOrder.products,
-          payment_value: validatedOrder.payment_value,
-        });
-      } else {
-        // if the user already have a cart
-        cart.products = [...cart.products, ...validatedOrder.products];
-        cart.payment_value =
-          validatedOrder.payment_value + validatedOrder.payment_value;
-      }
-      var result = await cart.save();
-      if (result && result.error) return res.status(422).json(result);
-      return res.status(200).json({ message: "All changes was saved" });
-    } else return res.status(422).json(errors);
+    //use the validator used to validate order products
+    var validatedOrder = await OrderValidator.ValidateOrderProducts(req, res);
+
+    if (!cart) {
+      // ifthe user does not habve a cart
+      cart = new Cart({
+        user_id: req.user._id,
+        products: validatedOrder.products,
+        payment_value: validatedOrder.payment_value,
+      });
+    } else {
+      // if the user already have a cart
+      cart.products = [...cart.products, ...validatedOrder.products];
+      cart.payment_value =
+        validatedOrder.payment_value + validatedOrder.payment_value;
+    }
+    var result = await cart.save();
+    if (result && result.error) return res.status(422).json(result);
+    return res.status(200).json({ message: "All changes was saved" });
   } catch (error) {
     console.error(error);
     return res.status(422).json({ message: "Unexpected error" });
@@ -58,35 +58,43 @@ exports.getCart = async (req, res) => {
 // add, update or delete a product in cart
 exports.storeToCart = async (req, res) => {
   try {
-    var cart = await Cart.findOne({ user_id: req.user._id });
+    var validatedCart = {};
 
     // validate the products in the cart if it has products only
-    var { errors, validatedOrder } = await validateOrderProducts(req.body);
-
-    // Invalid order products means that user have deleted all the products from the cart
-    // we can allow it because the cart can be empty
     if (
-      Object.keys(errors) == 0 ||
-      errors.message === "Invalid order products"
-    ) {
-      if (!cart) {
-        // ifthe user does not habve a cart
-        cart = new Cart({
-          user_id: req.user._id,
-          products: validatedOrder.products,
-          payment_value: validatedOrder.payment_value,
-        });
-      } else {
-        // if the user already have a cart
-        cart.products = validatedOrder.products;
-        cart.payment_value = validatedOrder.payment_value;
-      }
-      var result = await cart.save();
-      if (result && result.error) return res.status(422).json(result);
-      return res
-        .status(200)
-        .json({ message: "All changes was saved", cart: result._doc });
-    } else return res.status(422).json(errors);
+      req.body.products &&
+      Array.isArray(req.body.products) &&
+      req.body.products.length > 0
+    )
+      validatedCart = await OrderValidator.ValidateOrderProducts(req, res);
+    else {
+      // no cart products means that user have deleted all the products from the cart
+      // we can allow it because the cart can be empty
+      validatedCart.products = [];
+      validatedCart.payment_value = 0;
+    }
+
+    // get cart details
+    var cart = await Cart.findOne({ user_id: req.user._id });
+
+    if (!cart) {
+      // ifthe user does not habve a cart
+      cart = new Cart({
+        user_id: req.user._id,
+        products: validatedCart.products,
+        payment_value: validatedCart.payment_value,
+      });
+    } else {
+      // if the user already have a cart
+      cart.products = validatedCart.products;
+      cart.payment_value = validatedCart.payment_value;
+    }
+    // save cart
+    var result = await cart.save();
+    if (result && result.error) return res.status(422).json(result);
+    return res
+      .status(200)
+      .json({ message: "All changes was saved", cart: result._doc });
   } catch (error) {
     console.error(error);
     return res.status(422).json({ message: "Invalid cart details" });

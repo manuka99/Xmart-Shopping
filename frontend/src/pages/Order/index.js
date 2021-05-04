@@ -103,8 +103,8 @@ export default function Index() {
         })
         .catch((err) => {
           console.log(err);
-          if (err.response && err.response.data && err.response.data.errors)
-            swal(err.response.data.errors.message);
+          if (err.response && err.response.data && err.response.data)
+            swal(err.response.data.message);
           else swal("Unexpected error");
         });
     }

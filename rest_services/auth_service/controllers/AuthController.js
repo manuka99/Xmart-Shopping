@@ -4,29 +4,13 @@ const jwt = require("jsonwebtoken");
 const { KEY } = require("../config");
 const {
   validateUserInfo,
-  validateUserLoginCredentials,
-  validateEmail,
-  validateJWTToken,
-} = require("../util/Auth");
+  validateLoginCredentials,
+} = require("../util/AuthValidator");
 
 // register user
 exports.Register = async (req, res) => {
   try {
-    let validatedUserInfo = await validateUserInfo(req.body);
-    if (!validatedUserInfo)
-      return res.status(422).json({
-        message:
-          "Please enter your valid details with a password not less than 9 characters. and mobile must only have 9 characters",
-        success: false,
-      });
-
-    var validEmail = await validateEmail(validatedUserInfo.email);
-
-    if (!validEmail)
-      return res.status(422).json({
-        message: "There is a registered user with the email provided.",
-        success: false,
-      });
+    var validatedUserInfo = await validateUserInfo(req, res);
 
     // save user
     const hashedPassword = await bcrypt.hash(validatedUserInfo.password, 12);
@@ -56,15 +40,12 @@ exports.Register = async (req, res) => {
 // authenticate user
 exports.Authenticate = async (req, res) => {
   try {
-    let validatedUserLoginCredentials = validateUserLoginCredentials(req.body);
-    if (!validatedUserLoginCredentials)
-      return res.status(422).json({
-        message: "Please enter your valid email and password.",
-        success: false,
-      });
-    const user = await User.findOne({
-      email: validatedUserLoginCredentials.email,
+    let validatedLoginCredentials = validateLoginCredentials(req, res);
+    // fetch user with that email
+    var user = await User.findOne({
+      email: validatedLoginCredentials.email,
     });
+    // response error if user was not found
     if (!user) {
       return res.status(422).json({
         message: "Unable match user credentials",
@@ -73,17 +54,19 @@ exports.Authenticate = async (req, res) => {
     }
 
     // match password
-    let isMatch = await bcrypt.compare(
-      validatedUserLoginCredentials.password,
+    var isMatch = await bcrypt.compare(
+      validatedLoginCredentials.password,
       user.password
     );
+    // return error if passwods dopes nbot match
     if (!isMatch)
       return res.status(500).json({
-        message: "Invalid user password",
+        message: "Password does not match",
         success: false,
       });
     else {
-      // jwt
+      // login user with jwt token
+      // jwt - create token
       let token = jwt.sign(
         {
           user_id: user._id,
@@ -125,7 +108,13 @@ exports.Logout = async (req, res) => {
 exports.Profile = async (req, res) => res.send(req.user);
 
 exports.ValidateToken = async (req, res) => {
-  var decodedToken = validateJWTToken(req.body.token);
-  var user = await User.findById(decodedToken.user_id);
-  return res.json(user);
+  try {
+    // validate JWT token
+    var decodedToken = jwt.verify(req.body.token, KEY);
+    // fetch user token token user id
+    var user = await User.findById(decodedToken.user_id);
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(422).json({ message: "JWT token is not valid" });
+  }
 };

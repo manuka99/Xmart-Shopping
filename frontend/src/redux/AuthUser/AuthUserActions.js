@@ -58,23 +58,7 @@ export const fetch_user_data = () => {
       })
       .catch((error) => {
         dispatch(user_logout());
-        if (error.response) {
-          if (error.response.status === 500)
-            dispatch(
-              fetch_auth_user_data_error(
-                "User must log in to access protected features."
-              )
-            );
-          else dispatch(fetch_auth_user_data_error(error.message));
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          dispatch(fetch_auth_user_data_error(error));
-        }
-        console.log(error.config);
+        dispatch(fetch_auth_user_data_error(error));
       });
   };
 };

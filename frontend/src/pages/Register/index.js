@@ -50,27 +50,23 @@ export default function Index() {
   };
 
   const registerSubmit = () => {
-    if (registerInfo.email && registerInfo.password)
-      Api()
-        .post("/auth/register", registerInfo)
-        .then((res) => {
-          console.log(res);
-          if (res.data.user) {
-            localStorage.setItem(XMART_USER_TOKEN, res.data.token);
-            store.dispatch(
-              fetch_auth_user_data_success({ user: res.data.user })
-            );
-            store.dispatch(user_login());
-            swal("You have successfully Registered");
-            navigate("/");
-          } else swal("Registration failed");
-        })
-        .catch((err) =>
-          err.response && err.response.data
-            ? swal(err.response.data.message)
-            : swal("Registration failed")
-        );
-    else swal("Enter email and password");
+    Api()
+      .post("/auth/register", registerInfo)
+      .then((res) => {
+        console.log(res);
+        if (res.data.user) {
+          localStorage.setItem(XMART_USER_TOKEN, res.data.token);
+          store.dispatch(fetch_auth_user_data_success({ user: res.data.user }));
+          store.dispatch(user_login());
+          swal("You have successfully Registered");
+          navigate("/");
+        } else swal("Registration failed");
+      })
+      .catch((err) =>
+        err.response && err.response.data
+          ? swal(err.response.data.message)
+          : swal("Registration failed")
+      );
   };
 
   return (

@@ -4,10 +4,11 @@ const OrderValidator = require("../validators/OrderValidator");
 
 exports.addToCart = async (req, res) => {
   try {
-    var cart = await Cart.findOne({ user_id: req.user._id });
     // validate the products in the cart
     //use the validator used to validate order products
     var validatedOrder = await OrderValidator.ValidateOrderProducts(req, res);
+
+    var cart = await Cart.findOne({ user_id: req.user._id });
 
     if (!cart) {
       // ifthe user does not habve a cart
@@ -64,7 +65,6 @@ exports.getCart = async (req, res) => {
 exports.storeToCart = async (req, res) => {
   try {
     var validatedCart = {};
-
     // validate the products in the cart if it has products only
     if (
       req.body.products &&
@@ -78,10 +78,8 @@ exports.storeToCart = async (req, res) => {
       validatedCart.products = [];
       validatedCart.payment_value = 0;
     }
-
     // get cart details
     var cart = await Cart.findOne({ user_id: req.user._id });
-
     if (!cart) {
       // ifthe user does not habve a cart
       cart = new Cart({

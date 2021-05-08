@@ -4,6 +4,7 @@ exports.validatePaymentRequest = (req, res) => {
   var details = req.body;
 
   if (!details && !details.order_id) message = "Invalid payment details";
+  else if (!details.hash_order_code) message = "Invalid payment hash";
   else if (!details.card_no) message = "Enter card number";
   else if (isNaN(details.card_no)) message = "Invalid card number";
   else if (!details.card_cvc) message = "Enter card CVC";

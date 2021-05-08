@@ -1,6 +1,10 @@
 var md5 = require("md5");
 const { default: axios } = require("axios");
-const { PAYMENT_SECRET, PAYMENT_NOTIFY_URL } = require("../config");
+const {
+  ORDER_SECRET,
+  PAYMENT_SECRET,
+  PAYMENT_NOTIFY_URL,
+} = require("../config");
 const Mobile = require("../models/Mobile");
 const {
   validatePaymentRequest,
@@ -12,34 +16,45 @@ exports.makePayment = async (req, res) => {
   try {
     var validatedPayment = validatePaymentRequest(req, res);
 
-    // get the mobile object from DB to validate
-    var mobile = await Mobile.findOne({
-      mobile_no: validatedPayment.mobile_no,
-    });
+    // hash paras and validate if the payment details are valid
+    var hash_order_code_valid = md5(
+      `${ORDER_SECRET}${req.body.order_id}${req.body.transfer_amount}`
+    );
+    //check if payment details and hash matches
+    if (hash_order_code_valid == req.body.hash_order_code) {
+      // get the mobile object from DB to validate
+      var mobile = await Mobile.findOne({
+        mobile_no: validatedPayment.mobile_no,
+      });
 
-    // match mobile data with request data
-    var err_message = "";
-    if (!mobile) err_message = "invalid mobile number";
-    else if (mobile.pin != req.body.pin)
-      err_message = "pin number did not match";
-    // iff data is not matched
-    if (err_message.length > 0)
-      return res.status(422).json({ message: err_message });
+      // match mobile data with request data
+      var err_message = "";
+      if (!mobile) err_message = "invalid mobile number";
+      else if (mobile.pin != req.body.pin)
+        err_message = "pin number did not match";
+      // iff data is not matched
+      if (err_message.length > 0)
+        return res.status(422).json({ message: err_message });
 
-    // if data is matched
-    // complete transaction
-    mobile.balance += Number.parseFloat(req.body.transfer_amount);
-    var result = await mobile.save();
+      // if data is matched
+      // complete transaction
+      mobile.balance += Number.parseFloat(req.body.transfer_amount);
+      var result = await mobile.save();
 
-    // save failed
-    if (result && result.error) return res.status(422).json(result.error);
+      // save failed
+      if (result && result.error) return res.status(422).json(result.error);
 
-    //payment complted therefour notify main server payment complted
-    notifyServer(req.body.order_id, req.body.transfer_amount);
-    return res.status(200).json({
-      payment: "Payment was successfull",
-      status: 1,
-    });
+      //payment complted therefour notify main server payment complted
+      notifyServer(req.body.order_id, req.body.transfer_amount);
+      return res.status(200).json({
+        payment: "Payment was successfull",
+        status: 1,
+      });
+    }
+    // if hashing fails
+    return res
+      .status(422)
+      .json({ message: "Invalid payment details, refresh and try again" });
   } catch (error) {
     console.log(error);
     return res.status(422).json({

@@ -93,6 +93,7 @@ export default function Index() {
           order_id: oid,
           transfer_amount: order.payment_value,
           payment_type: order.payment_type,
+          hash_order_code: order.hash_order_code,
         })
         .then((res) => {
           console.log(res);

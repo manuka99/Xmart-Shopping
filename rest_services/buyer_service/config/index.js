@@ -11,4 +11,5 @@ module.exports = {
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
   TWILIO_NUMBER: process.env.TWILIO_NUMBER,
   PAYMENT_SECRET: process.env.PAYMENT_SECRET,
+  ORDER_SECRET: process.env.ORDER_SECRET,
 };

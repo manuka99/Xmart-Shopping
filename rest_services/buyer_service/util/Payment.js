@@ -33,7 +33,7 @@ exports.notifyPaymentSuccessfull = async (order) => {
     to: order.buyer_phone,
     body: `Order has been placed Order ID - ${order._id} with a payment value of Rs ${order.payment_value}. You can track your order through our website http://localhost:3000/track-order. Thank you for shopping with Xmart shopping`,
   };
-  sendSms(smsOptions);
+  // sendSms(smsOptions);
 };
 
 // send email and sms notifing payment successfully
@@ -53,5 +53,5 @@ exports.notifyPaymentFailed = async (order) => {
     to: order.buyer_phone,
     body: message,
   };
-  sendSms(smsOptions);
+  // sendSms(smsOptions);
 };

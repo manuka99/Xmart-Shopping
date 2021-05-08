@@ -1,4 +1,4 @@
-const { PAYMENT_SECRET } = require("../config");
+const { ORDER_SECRET } = require("../config");
 const Order = require("../model/Order");
 var md5 = require("md5");
 const OrderValidator = require("../validators/OrderValidator");
@@ -56,12 +56,11 @@ exports.saveOrderDetails = async (req, res) => {
     var result = await order.save();
     if (result && result.error) return res.status(422).json(result.error);
     else {
-      // hash parameters of the order to confirm payment from gateways
-      var hash_pay_code = md5(
-        `${PAYMENT_SECRET}${order._id}${order.payment_value}`
+      // hash parameters of the order to confirm payment details from gateways
+      var hash_order_code = md5(
+        `${ORDER_SECRET}${order._id}${order.payment_value}`
       );
-      console.log(hash_pay_code);
-      result = { ...result._doc, hash_pay_code };
+      result = { ...result._doc, hash_order_code };
       return res.status(200).json(result);
     }
   } catch (error) {

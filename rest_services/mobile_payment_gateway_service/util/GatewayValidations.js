@@ -3,6 +3,8 @@ exports.validatePaymentRequest = (req, res) => {
   var details = req.body;
 
   if (!details) message = "Invalid payment details";
+  else if (!details.order_id) message = "Invalid order details";
+  else if (!details.hash_order_code) message = "Invalid payment hash";
   else if (this.validateMobileNumber(details.mobile_no).length > 0)
     message = "Enter a valid 9 digit mobile number, without the initial 0";
   else if (!details.pin) message = "Enter pin number";

@@ -18,8 +18,6 @@ exports.paymentOrderNotification = async (req, res) => {
       `${PAYMENT_SECRET}${order._id}${order.payment_value}`
     );
 
-    console.log(`${hash_pay_code_valid} vs ${req.body.hash_pay_code}`);
-
     if (hash_pay_code_valid == req.body.hash_pay_code) {
       // complete order if hashed matches
       console.log("Valid payment");
@@ -54,6 +52,9 @@ exports.codPayment = async (req, res) => {
   try {
     var order = await Order.findById(req.body.order_id);
 
+    // validateOrderDetails function accpts req , res.
+    //validateOrderDetails will validate the req.body therefore create a new request object and append order data and user to it other than writing a new function.
+    // append the order to the reuest body and the request user to the user
     var req_data = { body: { ...order._doc }, user: { ...req.user } };
 
     console.log(req_data);

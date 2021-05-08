@@ -34,7 +34,7 @@ exports.makePayment = async (req, res) => {
         err_message = "pin number did not match";
       // iff data is not matched
       if (err_message.length > 0)
-        return res.status(422).json({ message: err_message });
+        return res.status(400).json({ message: err_message });
 
       // if data is matched
       // complete transaction
@@ -42,7 +42,7 @@ exports.makePayment = async (req, res) => {
       var result = await mobile.save();
 
       // save failed
-      if (result && result.error) return res.status(422).json(result.error);
+      if (result && result.error) return res.status(400).json(result.error);
 
       //payment complted therefour notify main server payment complted
       notifyServer(req.body.order_id, req.body.transfer_amount);
@@ -53,11 +53,11 @@ exports.makePayment = async (req, res) => {
     }
     // if hashing fails
     return res
-      .status(422)
+      .status(400)
       .json({ message: "Invalid payment details, refresh and try again" });
   } catch (error) {
     console.log(error);
-    return res.status(422).json({
+    return res.status(400).json({
       errors: { message: "This mobile number does not accept payments" },
     });
   }
@@ -70,7 +70,7 @@ exports.requestPin = async (req, res) => {
 
     // validate mobile number
     var error = validateMobileNumber(phone_number);
-    if (error.length > 0) return res.status(422).json({ mesaage: error });
+    if (error.length > 0) return res.status(400).json({ mesaage: error });
 
     // send pin number
     // generate random 4 digit pin
@@ -90,7 +90,7 @@ exports.requestPin = async (req, res) => {
     // save failed
     if (result && result.error)
       return res
-        .status(422)
+        .status(400)
         .json({ message: "Unexpected error please try again" });
 
     // send the pin via sms
@@ -107,7 +107,7 @@ exports.requestPin = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-      .status(422)
+      .status(400)
       .json({ errors: { message: "Invalid mobile number" } });
   }
 };

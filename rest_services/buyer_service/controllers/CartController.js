@@ -26,14 +26,14 @@ exports.addToCart = async (req, res) => {
     var result = await cart.save();
 
     // if cart save fail
-    if (result && result.error) return res.status(422).json(result);
+    if (result && result.error) return res.status(400).json(result);
 
     return res
       .status(200)
       .json({ message: "All changes was saved", cart: result._doc });
   } catch (error) {
     console.error(error);
-    return res.status(422).json({ message: "Unexpected error" });
+    return res.status(400).json({ message: "Unexpected error" });
   }
 };
 
@@ -57,7 +57,7 @@ exports.getCart = async (req, res) => {
     return res.status(200).json(cart ? cart : {});
   } catch (error) {
     console.error(error);
-    return res.status(422).json({ message: "User cart not found" });
+    return res.status(400).json({ message: "User cart not found" });
   }
 };
 
@@ -94,12 +94,12 @@ exports.storeToCart = async (req, res) => {
     }
     // save cart
     var result = await cart.save();
-    if (result && result.error) return res.status(422).json(result);
+    if (result && result.error) return res.status(400).json(result);
     return res
       .status(200)
       .json({ message: "All changes was saved", cart: result._doc });
   } catch (error) {
     console.error(error);
-    return res.status(422).json({ message: "Invalid cart details" });
+    return res.status(400).json({ message: "Invalid cart details" });
   }
 };

@@ -30,7 +30,7 @@ exports.paymentOrderNotification = async (req, res) => {
       // send error if saving failed
       if (result && result.error) {
         notifyPaymentFailed(order);
-        return res.status(422).json(result);
+        return res.status(400).json(result);
       }
 
       // send email and mobile sms after completing payment
@@ -57,8 +57,6 @@ exports.codPayment = async (req, res) => {
     // append the order to the reuest body and the request user to the user
     var req_data = { body: { ...order._doc }, user: { ...req.user } };
 
-    console.log(req_data);
-
     // validate order details
     var validatedOrder = OrderValidator.ValidateOrderDetails(req_data, res);
 
@@ -70,7 +68,7 @@ exports.codPayment = async (req, res) => {
 
     if (result && result.error) {
       notifyPaymentFailed(order);
-      return res.status(422).json(result);
+      return res.status(400).json(result);
     }
 
     // send email and mobile sms after completing payment
@@ -81,6 +79,6 @@ exports.codPayment = async (req, res) => {
   } catch (error) {
     console.error(error);
     notifyPaymentFailed(order);
-    return res.status(422).json({ errors: { message: "Payment failed" } });
+    return res.status(400).json({ errors: { message: "Payment failed" } });
   }
 };

@@ -31,7 +31,7 @@ exports.makePayment = async (req, res) => {
       var result = await card.save();
 
       // save failed
-      if (result && result.error) return res.status(422).json(result.error);
+      if (result && result.error) return res.status(400).json(result.error);
       //payment complted therefour notify main server payment complted
       notifyServer(transferInfo.order_id, transferInfo.transfer_amount);
       return res.status(200).json({
@@ -41,11 +41,11 @@ exports.makePayment = async (req, res) => {
     }
     // if hashing fails
     return res
-      .status(422)
+      .status(400)
       .json({ message: "Invalid payment details, refresh and try again" });
   } catch (error) {
     console.log(error);
-    return res.status(422).json({ message: "Invalid card number" });
+    return res.status(400).json({ message: "Invalid card number" });
   }
 };
 

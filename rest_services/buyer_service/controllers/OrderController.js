@@ -18,11 +18,11 @@ exports.newOrder = async (req, res) => {
     });
 
     let result = await order.save();
-    if (result && result.error) return res.status(422).json(result);
+    if (result && result.error) return res.status(400).json(result);
     else return res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    return res.status(422).json(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -33,7 +33,7 @@ exports.getOrderDetails = async (req, res) => {
     return res.status(200).json(order);
   } catch (error) {
     console.error(error);
-    return res.status(422).json({ message: "Order not found" });
+    return res.status(400).json({ message: "Order not found" });
   }
 };
 
@@ -54,7 +54,7 @@ exports.saveOrderDetails = async (req, res) => {
 
     // save details
     var result = await order.save();
-    if (result && result.error) return res.status(422).json(result.error);
+    if (result && result.error) return res.status(400).json(result.error);
     else {
       // hash parameters of the order to confirm payment details from gateways
       var hash_order_code = md5(
@@ -65,6 +65,6 @@ exports.saveOrderDetails = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    return res.status(422).json({ message: "Order not found" });
+    return res.status(400).json({ message: "Order not found" });
   }
 };

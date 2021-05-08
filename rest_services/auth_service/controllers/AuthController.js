@@ -30,7 +30,7 @@ exports.Register = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(422).json({
+    return res.status(400).json({
       message: "User was not registered",
       success: false,
     });
@@ -47,7 +47,7 @@ exports.Authenticate = async (req, res) => {
     });
     // response error if user was not found
     if (!user) {
-      return res.status(422).json({
+      return res.status(400).json({
         message: "Unable match user credentials",
         success: false,
       });
@@ -60,7 +60,7 @@ exports.Authenticate = async (req, res) => {
     );
     // return error if passwods dopes nbot match
     if (!isMatch)
-      return res.status(500).json({
+      return res.status(400).json({
         message: "Password does not match",
         success: false,
       });
@@ -93,7 +93,7 @@ exports.Authenticate = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
+    return res.status(400).json({
       message: "Failed to authenticate",
       success: false,
     });
@@ -109,12 +109,15 @@ exports.Profile = async (req, res) => res.send(req.user);
 
 exports.ValidateToken = async (req, res) => {
   try {
+    // validate token in request
+    if (!req.body.token)
+      return res.status(422).json({ message: "JWT token is required" });
     // validate JWT token
     var decodedToken = jwt.verify(req.body.token, KEY);
     // fetch user token token user id
     var user = await User.findById(decodedToken.user_id);
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(422).json({ message: "JWT token is not valid" });
+    return res.status(400).json({ message: "JWT token is not valid" });
   }
 };

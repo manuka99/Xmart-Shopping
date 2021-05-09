@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// app.all("*", Authenticate);
+app.all("*", Authenticate);
 app.use("/api/product", require("./routes/ProductRoutes"));
 
 const startApp = async () => {

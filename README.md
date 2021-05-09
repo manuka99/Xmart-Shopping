@@ -15,7 +15,7 @@
 
 ### Implementations
 
-1. Seller service should be there where sellers can add/update/delete items.
+1. Seller service where sellers can add/update/delete items.
 2. Product service to search (Full text), filter and perform all crud operations.
 3. Shopping cart management.
 4. Dummy credit card payment gateway service.

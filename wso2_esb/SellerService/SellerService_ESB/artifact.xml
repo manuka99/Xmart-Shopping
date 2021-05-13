@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="ListProducts" groupId="com.xmart.seller_service_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ListProducts.xml</file>
+    </artifact>
+    <artifact name="FindProduct" groupId="com.xmart.seller_service_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/FindProduct.xml</file>
+    </artifact>
+    <artifact name="NewProduct" groupId="com.xmart.seller_service_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/NewProduct.xml</file>
+    </artifact>
+    <artifact name="UpdateProduct" groupId="com.xmart.seller_service_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/UpdateProduct.xml</file>
+    </artifact>
+    <artifact name="DeleteProduct" groupId="com.xmart.seller_service_esb.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/DeleteProduct.xml</file>
+    </artifact>
+    <artifact name="ProductAPI" groupId="com.xmart.seller_service_esb.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/ProductAPI.xml</file>
+    </artifact>
+</artifacts>

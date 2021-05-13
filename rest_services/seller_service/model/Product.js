@@ -20,27 +20,27 @@ const productSchema = new Schema(
     category: {
       type: String,
       required: [true, "Please enter a valid product category"],
-      minlength: [4, "Product name must have at least 4 characters"],
+      minlength: [4, "Product category must have at least 4 characters"],
     },
     price: {
       type: Number,
       required: [true, "Please enter a valid product price"],
-      minlength: [3, "Product name must have at least 3 characters"],
+      minlength: [3, "Product price must have at least 3 characters"],
     },
     sku: {
       type: String,
       required: [true, "Please enter a valid product sku"],
-      minlength: [8, "Product name must have at least 8 characters"],
+      minlength: [8, "Product sku must have at least 8 characters"],
     },
     size: {
       type: String,
       required: [true, "Please enter a valid product size"],
-      minlength: [2, "Product name must have at least 2 characters"],
+      minlength: [2, "Product size must have at least 2 characters"],
     },
     stock: {
       type: Number,
       required: [true, "Please enter a valid product name"],
-      minlength: [1, "Product name must have at least 1 character"],
+      minlength: [1, "Product stock must have at least 1 character"],
     },
   },
   { timestamps: true }

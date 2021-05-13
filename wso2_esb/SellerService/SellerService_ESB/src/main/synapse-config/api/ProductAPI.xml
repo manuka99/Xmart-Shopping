@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/api/admin/product" name="ProductAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/">
+        <inSequence>
+            <log description="List products">
+                <property name="message" value="Routing to list products"/>
+            </log>
+            <send>
+                <endpoint key="ListProducts"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/{pid}">
+        <inSequence>
+            <log description="View product">
+                <property name="message" value="Routing to View product"/>
+            </log>
+            <send>
+                <endpoint key="FindProduct"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/">
+        <inSequence>
+            <log description="New product">
+                <property name="message" value="Routing to New product"/>
+            </log>
+            <send>
+                <endpoint key="NewProduct"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="PUT" uri-template="/{pid}">
+        <inSequence>
+            <log description="Update product">
+                <property name="message" value="Routing to Update product"/>
+            </log>
+            <send>
+                <endpoint key="UpdateProduct"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="DELETE" uri-template="/{pid}">
+        <inSequence>
+            <log description="Delete product">
+                <property name="message" value="Routing to Delete product"/>
+            </log>
+            <send>
+                <endpoint key="DeleteProduct"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

@@ -2,7 +2,7 @@ import axios from "axios";
 import swal from "sweetalert";
 import { APP_BASE_URL, XMART_USER_TOKEN } from "./AppConstants";
 
-export default function Api(nonApi = true) {
+export default function Api(nonApi = false) {
   let user_token = localStorage.getItem(XMART_USER_TOKEN);
   const api = axios.create({
     baseURL: `${APP_BASE_URL}${nonApi ? "" : "/api"}`,

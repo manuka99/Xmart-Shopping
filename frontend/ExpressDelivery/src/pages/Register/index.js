@@ -48,7 +48,7 @@ export default function Index() {
 
   const registerSubmit = () => {
     Api()
-      .post("/auth/register", registerInfo)
+      .post("/auth_delivery/register", registerInfo)
       .then((res) => {
         console.log(res);
         if (res.data.user) {

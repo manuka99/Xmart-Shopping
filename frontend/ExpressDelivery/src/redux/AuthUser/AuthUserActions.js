@@ -42,23 +42,23 @@ export const user_logout = () => {
 
 //side effects
 export const fetch_user_data = () => {
-  return (dispatch) => {
-    dispatch(fetch_auth_user_data_request());
-    Api()
-      .post("auth/validateToken", {
-        token: localStorage.getItem(EXPRESS_DELIVERY_USER_TOKEN),
-      })
-      .then((res) => {
-        const payload = {
-          user: res.data,
-        };
-        dispatch(fetch_auth_user_data_success(payload));
-        if (payload.user !== null && payload.user._id) dispatch(user_login());
-        else dispatch(user_logout());
-      })
-      .catch((error) => {
-        dispatch(user_logout());
-        dispatch(fetch_auth_user_data_error(error));
-      });
-  };
+  //return (dispatch) => {
+    //dispatch(fetch_auth_user_data_request());
+    //Api()
+      //.post("auth_delivery/validateToken", {
+       // token: localStorage.getItem(EXPRESS_DELIVERY_USER_TOKEN),
+      //})
+      //.then((res) => {
+        //const payload = {
+          //user: res.data,
+        //};
+        //dispatch(fetch_auth_user_data_success(payload));
+        //if (payload.user !== null && payload.user._id) dispatch(user_login());
+        //else dispatch(user_logout());
+      //})
+      //.catch((error) => {
+       // dispatch(user_logout());
+        //dispatch(fetch_auth_user_data_error(error));
+      //});
+ // };
 };

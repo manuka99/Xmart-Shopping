@@ -54,7 +54,7 @@ export default function Index() {
   const loginSubmit = () => {
     if (loginInfo.email && loginInfo.password)
       Api()
-        .post("/auth/login", loginInfo)
+        .post("/auth_delivery/login", loginInfo)
         .then((res) => {
           localStorage.setItem(EXPRESS_DELIVERY_USER_TOKEN, res.data.token);
           store.dispatch(fetch_auth_user_data_success({ user: res.data }));

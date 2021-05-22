@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/admin/delivery" name="DeliveryApi" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/">
+        <inSequence>
+            <log description="List all delivery">
+                <property name="message" value="Routing to list all delivery"/>
+            </log>
+            <send>
+                <endpoint key="ListAllDelivery"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/{delivery_id}">
+        <inSequence>
+            <log description="Find delivery">
+                <property name="message" value="Routing to find delivery"/>
+            </log>
+            <send>
+                <endpoint key="FindDelivery"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="POST" uri-template="/">
+        <inSequence>
+            <log description="New delivery">
+                <property name="message" value="Routing to new delivery"/>
+            </log>
+            <send>
+                <endpoint key="NewDelivery"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="PATCH" uri-template="/{delivery_id}">
+        <inSequence>
+            <log description="Update delivery">
+                <property name="message" value="Routing to update delivery"/>
+            </log>
+            <send>
+                <endpoint key="UpdateDelivery"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="DELETE" uri-template="/{delivery_id}">
+        <inSequence>
+            <log description="Delete delivery">
+                <property name="message" value="Routing to delete delivery"/>
+            </log>
+            <send>
+                <endpoint key="DeleteDelivery"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

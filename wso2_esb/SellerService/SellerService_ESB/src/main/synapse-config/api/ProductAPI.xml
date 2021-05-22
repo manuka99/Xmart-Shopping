@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/api/admin/product" name="ProductAPI" xmlns="http://ws.apache.org/ns/synapse">
+<api context="/admin/product" name="ProductAPI" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="GET" uri-template="/">
         <inSequence>
             <log description="List products">

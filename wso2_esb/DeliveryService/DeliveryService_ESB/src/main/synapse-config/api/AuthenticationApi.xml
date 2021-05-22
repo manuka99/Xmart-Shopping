@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/auth_delivery" name="AuthenticationApi" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/login">
+        <inSequence>
+            <log description="login log">
+                <property name="message" value="Routing to login"/>
+            </log>
+            <send>
+                <endpoint key="Login"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET">
+        <inSequence>
+            <log description="Register log">
+                <property name="message" value="Routing to register"/>
+            </log>
+            <send>
+                <endpoint key="Register"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

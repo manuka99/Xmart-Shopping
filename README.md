@@ -1,4 +1,4 @@
-# Xmart-Shopping
+# Xmart Shopping Platform
 
 ## Mern Stack + WSO2 Enterprise Integrator
 
